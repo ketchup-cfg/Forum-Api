@@ -4,7 +4,7 @@ using Forum.Data.Models;
 
 namespace Forum.Data.Queries;
 
-public class Topics
+public class Topics : ITopics
 {
     private readonly IDatabase _database;
 

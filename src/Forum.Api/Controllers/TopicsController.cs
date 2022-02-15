@@ -1,6 +1,6 @@
+using Forum.Data.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Forum.Data.Models;
-using Forum.Data.Queries;
 
 namespace Forum.Api.Controllers;
 
@@ -8,9 +8,16 @@ namespace Forum.Api.Controllers;
 [Route("api/[controller]")]
 public class TopicsController : ControllerBase
 {
-    [HttpGet]
-    public List<Topic> Index()
+    private readonly ITopics _topics;
+    
+    public TopicsController(ITopics topics)
     {
-        return Topics.GetAll();
+        _topics = topics;
+    }
+    
+    [HttpGet]
+    public async Task<IEnumerable<Topic>> Index()
+    {
+        return await _topics.GetAll();
     }
 }

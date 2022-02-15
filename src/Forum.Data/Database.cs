@@ -9,9 +9,9 @@ public class Database : IDatabase
 {
     private readonly string _connectionString;
 
-    public Database(string connectionString)
+    public Database(IConfiguration config)
     {
-        _connectionString = connectionString;
+        _connectionString = config.GetConnectionString("Forum");
     }
 
     public IDbConnection Connect()

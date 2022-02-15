@@ -1,27 +1,26 @@
 using System.Collections.Generic;
-using Forum.Data;
+using Data.Tests.Fixtures;
 using Forum.Data.Models;
 using Forum.Data.Queries;
-using Microsoft.Extensions.Configuration;
 using Xunit;
 
 namespace Data.Tests.Queries;
 
-public class TopicTests
+public class TopicTests : IClassFixture<DatabaseFixture>
 {
-    private readonly IConfiguration _config;
+    private readonly DatabaseFixture _fixture;
+    private readonly Topics _topics;
 
-    public TopicTests()
+    public TopicTests(DatabaseFixture fixture)
     {
-        _config = new ConfigurationBuilder()
-            .AddJsonFile("../appsettings.Development.json")
-            .Build();
+        _fixture = fixture;
+        _topics = new Topics(_fixture.Database);
     }
+    
     [Fact] public async void GetAll_ReturnsIEnumerableOfTopics()
     {
-        var topics = new Topics(new Database(_config.GetConnectionString("Test")));
-        var actual = await topics.GetAll();
+        var actual = await _topics.GetAll();
 
-        Assert.IsType<IEnumerable<Topic>>(actual);
+        Assert.IsAssignableFrom<IEnumerable<Topic>>(actual);
     }
 }
