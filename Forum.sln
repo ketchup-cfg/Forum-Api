@@ -8,6 +8,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forum.Data", "src\Forum.Data\Forum.Data.csproj", "{CAACC8DF-000F-4486-B38D-936A63C7999D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{E96FD598-6925-4A2B-B1A1-5B03AAB9C1B7}"
+	ProjectSection(SolutionItems) = preProject
+		appsettings.Development.json = appsettings.Development.json
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Tests", "test\Data.Tests\Data.Tests.csproj", "{1CDA37F8-9EF1-4349-8473-E529DC09482D}"
 EndProject
