@@ -354,3 +354,5 @@ MigrationBackup/
 
 # Mac OS Generated Files
 .DS_Store
+
+**/**/appsettings.Development.json
