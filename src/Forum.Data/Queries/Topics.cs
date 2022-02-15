@@ -23,4 +23,25 @@ public class Topics : ITopics
         return await connection.QueryAsync<Topic>(sql);
     }
     
+    public async Task<Topic?> GetTopicById(int id)
+    {
+        using var connection = _database.Connect();
+        const string sql = @"select id   as Id
+                                  , name as Name
+                               from topics
+                              where id = @Id";
+
+        return await connection.QueryFirstOrDefaultAsync<Topic>(sql, new {Id = id});
+    }
+    
+    public async Task<Topic?> GetTopicByName(string name)
+    {
+        using var connection = _database.Connect();
+        const string sql = @"select id   as Id
+                                  , name as Name
+                               from topics
+                              where name = @Name";
+
+        return await connection.QueryFirstOrDefaultAsync<Topic>(sql, new {Name = name});
+    }
 }
