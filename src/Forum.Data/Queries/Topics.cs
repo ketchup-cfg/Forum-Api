@@ -12,7 +12,7 @@ public class Topics : ITopics
     {
         _database = database;
     }
-
+    
     public async Task<IEnumerable<Topic>> GetAll()
     {
         using var connection = _database.Connect();
