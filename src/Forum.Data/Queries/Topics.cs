@@ -16,8 +16,9 @@ public class Topics : ITopics
     public async Task<IEnumerable<Topic>> GetAll()
     {
         using var connection = _database.Connect();
-        const string sql = @"select id   as Id
-                                  , name as Name
+        const string sql = @"select id          as Id
+                                  , name        as Name
+                                  , description as Description
                               from topics";
 
         return await connection.QueryAsync<Topic>(sql);
@@ -26,8 +27,9 @@ public class Topics : ITopics
     public async Task<Topic?> GetTopicById(int id)
     {
         using var connection = _database.Connect();
-        const string sql = @"select id   as Id
-                                  , name as Name
+        const string sql = @"select id          as Id
+                                  , name        as Name
+                                  , description as Description
                                from topics
                               where id = @Id";
 
@@ -37,8 +39,9 @@ public class Topics : ITopics
     public async Task<Topic?> GetTopicByName(string name)
     {
         using var connection = _database.Connect();
-        const string sql = @"select id   as Id
-                                  , name as Name
+        const string sql = @"select id          as Id
+                                  , name        as Name
+                                  , description as description
                                from topics
                               where name = @Name";
 

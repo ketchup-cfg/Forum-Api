@@ -14,4 +14,9 @@ public class Topic
     /// The unique human-readable name of the topic.
     /// </summary>
     public string Name { get; set; } = string.Empty;
+
+    /// <summary>
+    /// The optional detailed description of the topic.
+    /// </summary>
+    public string Description { get; set; } = string.Empty;
 }
