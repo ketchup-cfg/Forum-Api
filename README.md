@@ -10,7 +10,7 @@ To run this application:
 ```json
 {
    "ConnectionStrings": {
-   "Forum": "<PostgreSQL Database Connection String>"
+      "Forum": "<PostgreSQL Database Connection String>"
    }
 }
 ```
