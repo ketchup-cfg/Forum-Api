@@ -4,7 +4,7 @@ using Forum.Data.Models;
 
 namespace Forum.Data.Queries;
 
-public class Topics : ITopics
+public class Topics : ITopics, ITable
 {
     private readonly IDatabase _database;
 
@@ -12,7 +12,7 @@ public class Topics : ITopics
     {
         _database = database;
     }
-    
+
     public async Task<IEnumerable<Topic>> GetAll()
     {
         using var connection = _database.Connect();
@@ -70,5 +70,38 @@ public class Topics : ITopics
                 topic.Name,
                 topic.Description,
             });
+    }
+
+    public void Initialize()
+    {
+        throw new NotImplementedException();
+    }
+
+    public async void DropTable()
+    {
+        using var connection = _database.Connect();
+        const string sql = @"drop table if exists topics;";
+
+        await connection.ExecuteAsync(sql);
+    }
+
+    public async void CreateTable()
+    {
+        using var connection = _database.Connect();
+        const string sql = @"create table topics (
+                                id          serial primary key,
+                                name        text   not null unique,
+                                description text
+                             );";
+
+        await connection.ExecuteAsync(sql);
+    }
+
+    public async void ClearTable()
+    {
+        using var connection = _database.Connect();
+        const string sql = @"truncate topics;";
+
+        await connection.ExecuteAsync(sql);
     }
 }

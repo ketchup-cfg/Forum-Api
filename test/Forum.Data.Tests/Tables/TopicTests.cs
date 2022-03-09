@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Data.Tests.Fixtures;
 using Forum.Data.Models;
-using Forum.Data.Queries;
+using Forum.Data.Tables;
+using Forum.Tests.Library.Fixtures;
 using Xunit;
 
-namespace Data.Tests.Queries;
+namespace Forum.Data.Tests.Tables;
 
 public class TopicTests : IClassFixture<DatabaseFixture>
 {
@@ -16,6 +14,7 @@ public class TopicTests : IClassFixture<DatabaseFixture>
     public TopicTests(DatabaseFixture fixture)
     {
         _topics = new Topics(fixture.Database);
+        _topics.Initialize();
     }
     
     [Fact]
@@ -37,7 +36,7 @@ public class TopicTests : IClassFixture<DatabaseFixture>
         var validTopicId = await _topics.CreateTopic(validTopic);
         var foundTopic = await _topics.GetTopicById(validTopicId);
 
-        Assert.Equal(foundTopic.Id, validTopicId);
+        Assert.Equal(foundTopic!.Id, validTopicId);
     }
     
     [Fact]
@@ -60,7 +59,7 @@ public class TopicTests : IClassFixture<DatabaseFixture>
         _ = await _topics.CreateTopic(validTopic);
         var foundTopic = await _topics.GetTopicByName(validTopic.Name);
 
-        Assert.Equal(foundTopic.Name, validTopic.Name);
+        Assert.Equal(foundTopic!.Name, validTopic.Name);
     }
     
     [Fact]

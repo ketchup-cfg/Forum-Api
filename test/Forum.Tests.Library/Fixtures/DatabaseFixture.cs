@@ -1,7 +1,6 @@
-using System;
-using Forum.Data;
+using Forum.Tests.Library.Data;
 
-namespace Data.Tests.Fixtures;
+namespace Forum.Tests.Library.Fixtures;
 
 public class DatabaseFixture : IDisposable
 {
@@ -10,7 +9,6 @@ public class DatabaseFixture : IDisposable
     public DatabaseFixture()
     {
         Database = new TestDatabase();
-        Database.Initialize();
     }
     
     public void Dispose()
