@@ -1,6 +1,6 @@
 using Forum.Data;
-using Forum.Data.Interfaces;
-using Forum.Data.Tables;
+using Forum.Data.Abstractions;
+using Forum.Data.Queries;
 
 var builder = WebApplication.CreateBuilder(args);
 

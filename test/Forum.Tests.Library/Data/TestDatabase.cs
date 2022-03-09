@@ -1,5 +1,6 @@
 using System.Data;
-using Forum.Data.Interfaces;
+using Dapper;
+using Forum.Data.Abstractions;
 using Npgsql;
 
 namespace Forum.Tests.Library.Data;
@@ -28,5 +29,37 @@ public class TestDatabase : IDatabase
     public IDbConnection Connect()
     {
         return new NpgsqlConnection(_connectionString);
+    }
+
+    public void Initialize()
+    {
+        DropTopicsTable();
+        CreateTopicsTable();
+    }
+    
+    /// <summary>
+    /// Drop the topics table from the application database.
+    /// </summary>
+    private void DropTopicsTable()
+    {
+        using var connection = Connect();
+        const string sql = @"drop table if exists topics;";
+
+        connection.Execute(sql);
+    }
+
+    /// <summary>
+    /// Create the topics table in the application database.
+    /// </summary>
+    private void CreateTopicsTable()
+    {
+        using var connection = Connect();
+        const string sql = @"create table topics (
+                                id          serial primary key,
+                                name        text   not null unique,
+                                description text
+                             );";
+
+        connection.Execute(sql);
     }
 }

@@ -1,10 +1,10 @@
 using Dapper;
-using Forum.Data.Interfaces;
+using Forum.Data.Abstractions;
 using Forum.Data.Models;
 
-namespace Forum.Data.Tables;
+namespace Forum.Data.Queries;
 
-public class Topics : ITopics, ITable
+public class Topics : ITopics
 {
     private readonly IDatabase _database;
 
@@ -71,34 +71,8 @@ public class Topics : ITopics, ITable
                 topic.Description,
             });
     }
-
-    public void Initialize()
-    {
-        DropTable();
-        CreateTable();
-    }
-
-    public async void DropTable()
-    {
-        using var connection = _database.Connect();
-        const string sql = @"drop table if exists topics;";
-
-        await connection.ExecuteAsync(sql);
-    }
-
-    public async void CreateTable()
-    {
-        using var connection = _database.Connect();
-        const string sql = @"create table topics (
-                                id          serial primary key,
-                                name        text   not null unique,
-                                description text
-                             );";
-
-        await connection.ExecuteAsync(sql);
-    }
-
-    public async void ClearTable()
+    
+    public async void RemoveAll()
     {
         using var connection = _database.Connect();
         const string sql = @"truncate topics;";

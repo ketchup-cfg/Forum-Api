@@ -1,5 +1,5 @@
 using Forum.Api.Controllers.Base;
-using Forum.Data.Interfaces;
+using Forum.Data.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Forum.Data.Models;
 

@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace Forum.Data.Interfaces;
+namespace Forum.Data.Abstractions;
 
 public interface IDatabase
 {
@@ -9,4 +9,9 @@ public interface IDatabase
     /// </summary>
     /// <returns>An open connection to the application database.</returns>
     public IDbConnection Connect();
+
+    /// <summary>
+    /// Initialize the application database.
+    /// </summary>
+    public void Initialize();
 }

@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Forum.Data.Models;
-using Forum.Data.Tables;
+using Forum.Data.Queries;
 using Forum.Tests.Library.Fixtures;
 using Xunit;
 
-namespace Forum.Data.Tests.Tables;
+namespace Forum.Data.Tests.Queries;
 
 public class TopicTests : IClassFixture<DatabaseFixture>
 {
@@ -16,14 +14,13 @@ public class TopicTests : IClassFixture<DatabaseFixture>
     public TopicTests(DatabaseFixture fixture)
     {
         _topics = new Topics(fixture.Database);
-        _topics.Initialize();
     }
 
     [Fact]
     public async void GetAll_NoTopics_ReturnsEmptyList()
     {
         // Arrange
-        _topics.ClearTable();
+        _topics.RemoveAll();
         
         // Act
         var topics = await _topics.GetAll();
@@ -49,7 +46,7 @@ public class TopicTests : IClassFixture<DatabaseFixture>
     public async void GetTopicById_ValidId_ReturnsRequestedTopic()
     {
         // Arrange
-        var mockTopic = CreateMockTopic();
+        var mockTopic = await CreateMockTopic();
         
         // Act
         var foundTopic = await _topics.GetTopicById(mockTopic.Id);
@@ -99,47 +96,6 @@ public class TopicTests : IClassFixture<DatabaseFixture>
         Assert.Null(foundTopic);
     }
 
-    [Fact]
-    public void GetAll_TableDoesNotExist_ThrowsException()
-    {
-        // Arrange
-        _topics.DropTable();
-        
-        // Act
-        Action actual = () => _topics.GetAll();
-        
-        // Assert
-        Assert.Throws<Npgsql.PostgresException>(actual);
-    }
-
-    [Fact]
-    public async void GetTopicById_TableDoesNotExist_ThrowsException()
-    {
-        // Arrange
-        var mockTopic = await CreateMockTopic();
-        _topics.DropTable();
-        
-        // Act
-        Action actual = () => _topics.GetTopicById(mockTopic.Id);
-        
-        // Assert
-        Assert.Throws<Npgsql.PostgresException>(actual);
-    }
-
-    [Fact]
-    public async void GetTopicByName_TableDoesNotExist_ThrowsException()
-    {
-        // Arrange
-        var mockTopic = await CreateMockTopic();
-        _topics.DropTable();
-        
-        // Act
-        Action actual = () => _topics.GetTopicByName(mockTopic.Name);
-        
-        // Assert
-        Assert.Throws<Npgsql.PostgresException>(actual);
-    }
-    
     /// <summary>
     /// Create a mock topic in the database for testing purposes, with a randomly generated string being used for the
     /// topic name.
