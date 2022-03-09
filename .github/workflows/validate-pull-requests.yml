@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+env:
+  FORUM_TEST_DB: ${{ secrets.FORUM_TEST_DB }}
+
 jobs:
   validate:
 
@@ -13,8 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET
-        env:
-          FORUM_TEST_DB: ${{ secrets.FORUM_TEST_DB }}
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
