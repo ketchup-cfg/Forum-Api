@@ -23,6 +23,6 @@ public class TestDatabase : IDatabase
 
     public IDbConnection Connect()
     {
-        return new NpgsqlConnection();
+        return new NpgsqlConnection(_connectionString);
     }
 }
