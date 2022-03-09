@@ -2,7 +2,7 @@ using Dapper;
 using Forum.Data.Interfaces;
 using Forum.Data.Models;
 
-namespace Forum.Data.Queries;
+namespace Forum.Data.Tables;
 
 public class Topics : ITopics, ITable
 {
@@ -74,7 +74,8 @@ public class Topics : ITopics, ITable
 
     public void Initialize()
     {
-        throw new NotImplementedException();
+        DropTable();
+        CreateTable();
     }
 
     public async void DropTable()
