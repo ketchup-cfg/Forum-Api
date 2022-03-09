@@ -61,15 +61,14 @@ public class Topics : ITopics
                             (
                                 @Name,
                                 @Description
-                            );";
+                            )
+                            returning Id;";
         
-        await connection.ExecuteAsync(sql,
+        return await connection.ExecuteScalarAsync<int>(sql,
             new
             {
                 topic.Name,
                 topic.Description,
             });
-
-        return await connection.ExecuteScalarAsync<int>("select last_insert_id()");
     }
 }
