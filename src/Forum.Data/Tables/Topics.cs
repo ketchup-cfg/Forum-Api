@@ -35,7 +35,7 @@ public class Topics : ITopics, ITable
 
         return await connection.QueryFirstOrDefaultAsync<Topic>(sql, new {Id = id});
     }
-    
+
     public async Task<Topic?> GetTopicByName(string name)
     {
         using var connection = _database.Connect();
