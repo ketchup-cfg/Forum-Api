@@ -52,17 +52,15 @@ public class Topics : ITopics
     public async Task<int> CreateTopic(Topic topic)
     {
         using var connection = _database.Connect();
-        const string sql = @"insert into topics
-                            (
+        const string sql = @"insert into topics (
                                 name,
                                 description
-                            )
-                            values
-                            (
+                             )
+                             values (
                                 @Name,
                                 @Description
-                            )
-                            returning Id;";
+                             )
+                             returning Id;";
         
         return await connection.ExecuteScalarAsync<int>(sql,
             new
@@ -71,12 +69,28 @@ public class Topics : ITopics
                 topic.Description,
             });
     }
-    
-    public async void RemoveAll()
+
+    public async Task<int> UpdateTopic(Topic topic)
     {
         using var connection = _database.Connect();
-        const string sql = @"truncate topics;";
+        const string sql = @"update topics
+                                set name = @Name
+                                  , description = @Description
+                              where id = @Id;";
+        
+        return await connection.ExecuteAsync(sql, 
+            new 
+            {
+                Name = topic.Name,
+                Description = topic.Description,
+                Id = topic.Id
+            });
+    }
+    public async Task<int> RemoveAll()
+    {
+        using var connection = _database.Connect();
+        const string sql = @"delete from topics;";
 
-        await connection.ExecuteAsync(sql);
+        return await connection.ExecuteAsync(sql);
     }
 }

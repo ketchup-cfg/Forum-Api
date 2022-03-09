@@ -32,7 +32,15 @@ public interface ITopics
     public Task<int> CreateTopic(Topic topic);
 
     /// <summary>
+    /// Update the information for an existing topic.
+    /// </summary>
+    /// <param name="topic">The values to use to replace the existing topic's data with.</param>
+    /// <returns>The number of topics updated successfully.</returns>
+    public Task<int> UpdateTopic(Topic topic);
+
+    /// <summary>
     /// Remove all existing topic entries.
     /// </summary>
-    public void RemoveAll();
+    /// <returns>The number of topics removed.</returns>
+    public Task<int> RemoveAll();
 }
