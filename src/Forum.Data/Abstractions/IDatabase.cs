@@ -1,7 +1,6 @@
 ﻿using System.Data;
-using Dapper;
 
-namespace Forum.Data.Interfaces;
+namespace Forum.Data.Abstractions;
 
 public interface IDatabase
 {
@@ -12,8 +11,7 @@ public interface IDatabase
     public IDbConnection Connect();
 
     /// <summary>
-    /// Initialize the database by creating tables needed for the application database, ensuring to also drop these
-    /// tables if they already exist.  
+    /// Initialize the application database.
     /// </summary>
     public void Initialize();
 }

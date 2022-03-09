@@ -1,6 +1,6 @@
 using Forum.Data.Models;
 
-namespace Forum.Data.Interfaces;
+namespace Forum.Data.Abstractions;
 
 public interface ITopics
 {
@@ -30,4 +30,9 @@ public interface ITopics
     /// <param name="topic">The values for the new topic to be created.</param>
     /// <returns>The ID for the new topic record.</returns>
     public Task<int> CreateTopic(Topic topic);
+
+    /// <summary>
+    /// Remove all existing topic entries.
+    /// </summary>
+    public void RemoveAll();
 }

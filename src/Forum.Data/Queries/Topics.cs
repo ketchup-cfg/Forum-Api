@@ -1,5 +1,5 @@
 using Dapper;
-using Forum.Data.Interfaces;
+using Forum.Data.Abstractions;
 using Forum.Data.Models;
 
 namespace Forum.Data.Queries;
@@ -12,7 +12,7 @@ public class Topics : ITopics
     {
         _database = database;
     }
-    
+
     public async Task<IEnumerable<Topic>> GetAll()
     {
         using var connection = _database.Connect();
@@ -35,7 +35,7 @@ public class Topics : ITopics
 
         return await connection.QueryFirstOrDefaultAsync<Topic>(sql, new {Id = id});
     }
-    
+
     public async Task<Topic?> GetTopicByName(string name)
     {
         using var connection = _database.Connect();
@@ -70,5 +70,13 @@ public class Topics : ITopics
                 topic.Name,
                 topic.Description,
             });
+    }
+    
+    public async void RemoveAll()
+    {
+        using var connection = _database.Connect();
+        const string sql = @"truncate topics;";
+
+        await connection.ExecuteAsync(sql);
     }
 }

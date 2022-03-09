@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
-
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
@@ -23,6 +23,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Forum.Data\Forum.Data.csproj" />
+      <ProjectReference Include="..\Forum.Tests.Library\Forum.Tests.Library.csproj" />
     </ItemGroup>
 
     <ItemGroup>
