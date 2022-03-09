@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,11 +29,15 @@ public class TopicTests : IClassFixture<DatabaseFixture>
     [Fact]
     public async void GetTopicById_ValidId_ReturnsRequestedTopic()
     {
-        var topics = await _topics.GetAll();
-        var validTopic = topics.First();
-        var foundTopic = await _topics.GetTopicById(validTopic.Id);
+        var validTopic = new Topic
+        {
+            Name = Guid.NewGuid().ToString(),
+            Description = "Test"
+        };
+        var validTopicId = await _topics.CreateTopic(validTopic);
+        var foundTopic = await _topics.GetTopicById(validTopicId);
 
-        Assert.NotNull(foundTopic);
+        Assert.Equal(foundTopic.Id, validTopicId);
     }
     
     [Fact]
@@ -47,11 +52,15 @@ public class TopicTests : IClassFixture<DatabaseFixture>
     [Fact]
     public async void GetTopicByName_ValidName_ReturnsRequestedTopic()
     {
-        var topics = await _topics.GetAll();
-        var validTopic = topics.First();
+        var validTopic = new Topic
+        {
+            Name = Guid.NewGuid().ToString(),
+            Description = "Test"
+        };
+        _ = await _topics.CreateTopic(validTopic);
         var foundTopic = await _topics.GetTopicByName(validTopic.Name);
 
-        Assert.NotNull(foundTopic);
+        Assert.Equal(foundTopic.Name, validTopic.Name);
     }
     
     [Fact]

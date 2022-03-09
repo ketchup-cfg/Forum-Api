@@ -47,4 +47,28 @@ public class Topics : ITopics
 
         return await connection.QueryFirstOrDefaultAsync<Topic>(sql, new {Name = name});
     }
+
+
+    public async Task<int> CreateTopic(Topic topic)
+    {
+        using var connection = _database.Connect();
+        const string sql = @"insert into topics
+                            (
+                                name,
+                                description
+                            )
+                            values
+                            (
+                                @Name,
+                                @Description
+                            )
+                            returning Id;";
+        
+        return await connection.ExecuteScalarAsync<int>(sql,
+            new
+            {
+                topic.Name,
+                topic.Description,
+            });
+    }
 }

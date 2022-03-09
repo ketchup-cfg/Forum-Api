@@ -23,4 +23,11 @@ public interface ITopics
     /// <param name="name">The unique name for the topic to retrieve.</param>
     /// <returns>The topic associated with the provided name, if found. Otherwise, a null value if not found.</returns>
     public Task<Topic?> GetTopicByName(string name);
+
+    /// <summary>
+    /// Create a new topic and return the ID for the new topic.
+    /// </summary>
+    /// <param name="topic">The values for the new topic to be created.</param>
+    /// <returns>The ID for the new topic record.</returns>
+    public Task<int> CreateTopic(Topic topic);
 }
