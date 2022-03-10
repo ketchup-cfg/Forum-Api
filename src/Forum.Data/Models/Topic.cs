@@ -15,7 +15,6 @@ public class Topic
     /// <summary>
     /// The unique human-readable name of the topic.
     /// </summary>
-    ///         [Required]
     [Required]
     [MinLength(1)]
     public string Name { get; set; } = string.Empty;
