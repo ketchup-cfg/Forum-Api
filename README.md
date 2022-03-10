@@ -1,8 +1,7 @@
+
 # Forum-Web-App
 
 This application is a ASP.NET Core web application, with both an ASP.NET Core REST API web server (src/Forum.Api) and a full-stack Razor Pages web application (src/Forum.Pages).
-
-## Configure Dependencies
 
 First, ensure that you have .NET 6 installed and configured on the target system. If not, please follow the instructions for your OS here: https://dotnet.microsoft.com/en-us/download/dotnet/6.0.
 
@@ -23,7 +22,9 @@ Then, add the following content in the file to point the application to a config
 
 After the appsettings file has been configured, run `dotnet run` while in the /src/Forum.Api directory to run the ASP.NET Core Web API application.
 
-## Running the ASP.NET Core Razor Pages Application
+## Running the ASP.NET Core Razor Pages Application (Work In Progress)
+
+***As a note, the work for the Razor Pages application has not progressed, yet, so as of right now, there is not much to see here.***
 
 First, navigate to the /src/Forum.Pages directory, and create a file named appsettings.Development.json.
 
