@@ -20,7 +20,7 @@ public class TopicsController : ForumBaseController
     /// </summary>
     /// <returns>A collection containing data for all existing forum topics, if any exist.</returns>
     /// <response code="200">The requested topic was found.</response>
-    /// <response code="404">No topic was found matching the name passed into the URI path.</response>
+    /// <response code="204">No topics are currently defined.</response>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType((StatusCodes.Status204NoContent))]
