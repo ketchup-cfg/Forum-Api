@@ -86,6 +86,7 @@ public class Topics : ITopics
                 Id = topic.Id
             });
     }
+
     public async Task<int> RemoveAll()
     {
         using var connection = _database.Connect();
