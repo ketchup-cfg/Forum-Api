@@ -19,7 +19,7 @@ public class TopicsController : ForumBaseController
     /// Find and return a collection of all existing forum topics.
     /// </summary>
     /// <returns>A collection containing data for all existing forum topics, if any exist.</returns>
-    /// <response code="200">The requested topic was found.</response>
+    /// <response code="200">Topics are defined and were able to be located.</response>
     /// <response code="204">No topics are currently defined.</response>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
