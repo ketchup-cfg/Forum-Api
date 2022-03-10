@@ -3,6 +3,8 @@
 
 This application is a ASP.NET Core web application, with both an ASP.NET Core REST API web server (src/Forum.Api) and a full-stack Razor Pages web application (src/Forum.Pages).
 
+## Installing Dependencies
+
 First, ensure that you have .NET 6 installed and configured on the target system. If not, please follow the instructions for your OS here: https://dotnet.microsoft.com/en-us/download/dotnet/6.0.
 
 Then, navigate to the root of the application file system and run `dotnet restore` to install the NuGet dependencies for all projects within the solution.
