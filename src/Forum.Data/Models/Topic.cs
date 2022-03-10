@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Forum.Data.Models;
 
 /// <summary>
@@ -13,10 +15,13 @@ public class Topic
     /// <summary>
     /// The unique human-readable name of the topic.
     /// </summary>
+    ///         [Required]
+    [Required]
+    [MinLength(1)]
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// The optional detailed description of the topic.
     /// </summary>
-    public string Description { get; set; } = string.Empty;
+    public string? Description { get; set; }
 }

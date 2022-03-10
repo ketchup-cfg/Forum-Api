@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Forum.Data.Models;
 using Forum.Data.Queries;
 using Forum.Tests.Library.Fixtures;
+using Npgsql;
 using Xunit;
 
 namespace Forum.Data.Tests.Queries;
@@ -64,8 +65,11 @@ public class TopicTests : IClassFixture<DatabaseFixture>
     [InlineData(-100)]
     [InlineData(-2000)]
     [InlineData(int.MinValue)]
-    public async void GetTopicById_InvalidId_ReturnsNull(int invalidId)
+    public async void GetTopicById_TopicDoesNotExist_ReturnsNull(int invalidId)
     {
+        // Arrange
+        _ = await _topics.RemoveAll();
+        
         // Act
         var foundTopic = await _topics.GetTopicById(invalidId);
 
@@ -87,10 +91,14 @@ public class TopicTests : IClassFixture<DatabaseFixture>
     }
     
     [Theory]
+    [InlineData("Test Topic")]
     [InlineData("")]
     [InlineData(null)]
-    public async void GetTopicByName_InvalidName_ReturnsNull(string invalidName)
+    public async void GetTopicByName_TopicDoesNotExist_ReturnsNull(string invalidName)
     {
+        // Arrange
+        _ = await _topics.RemoveAll();
+        
         // Act
         var foundTopic = await _topics.GetTopicByName(invalidName);
 
@@ -105,7 +113,7 @@ public class TopicTests : IClassFixture<DatabaseFixture>
     [InlineData("Just your average valid topic description")]
     [InlineData("")]
     [InlineData(null)]
-    public async void UpdateTopic_ValidDescription_UpdatesOneRow(string validDescription)
+    public async void UpdateTopic_ValidDescription_UpdatesOneTopic(string validDescription)
     {
         // Arrange
         const int expected = 1;
@@ -146,9 +154,23 @@ public class TopicTests : IClassFixture<DatabaseFixture>
         
         // Act
         var exception = await Record.ExceptionAsync(updateTopic);
-        
+
         // Assert
         Assert.IsType<Npgsql.PostgresException>(exception);
+    }
+    
+    [Fact]
+    public async void UpdateTopic_NoChangesMade_UpdatesOneTopic()
+    {
+        // Arrange
+        const int expected = 1;
+        var mockTopic = await CreateMockTopic();
+
+        // Act
+        var actual = await _topics.UpdateTopic(mockTopic);
+
+        // Assert
+        Assert.Equal(expected, actual);
     }
 
     [Fact]
