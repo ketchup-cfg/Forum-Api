@@ -184,7 +184,7 @@ public class TopicTests : IClassFixture<DatabaseFixture>
         mockTopic.Description = validDescription;
 
         // Act
-        var actual = await _topics.UpdateTopic(mockTopic);
+        var actual = await _topics.UpdateTopic(mockTopic.Id, mockTopic);
         
         // Assert
         Assert.Equal(expected, actual);
@@ -198,7 +198,7 @@ public class TopicTests : IClassFixture<DatabaseFixture>
         const string expected = PostgresErrorCodes.NotNullViolation;
         var mockTopic = await _helpers.CreateMockTopic();
         mockTopic.Name = invalidName;
-        Func<Task<int>> updateTopic = async () => await _topics.UpdateTopic(mockTopic);
+        Func<Task<int>> updateTopic = async () => await _topics.UpdateTopic(mockTopic.Id, mockTopic);
         
         // Act
         var actual = (await Record.ExceptionAsync(updateTopic) as PostgresException)!.SqlState;
@@ -215,7 +215,7 @@ public class TopicTests : IClassFixture<DatabaseFixture>
         var mockTopic1 = await _helpers.CreateMockTopic();
         var mockTopic2 = await _helpers.CreateMockTopic();
         mockTopic1.Name = mockTopic2.Name;
-        Func<Task<int>> updateTopic = async () => await _topics.UpdateTopic(mockTopic1);
+        Func<Task<int>> updateTopic = async () => await _topics.UpdateTopic(mockTopic1.Id, mockTopic1);
         
         // Act
         var actual = (await Record.ExceptionAsync(updateTopic) as PostgresException)!.SqlState;
@@ -232,7 +232,7 @@ public class TopicTests : IClassFixture<DatabaseFixture>
         var mockTopic = await _helpers.CreateMockTopic();
 
         // Act
-        var actual = await _topics.UpdateTopic(mockTopic);
+        var actual = await _topics.UpdateTopic(mockTopic.Id, mockTopic);
 
         // Assert
         Assert.Equal(expected, actual);

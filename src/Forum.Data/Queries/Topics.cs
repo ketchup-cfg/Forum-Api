@@ -70,20 +70,22 @@ public class Topics : ITopics
             });
     }
 
-    public async Task<int> UpdateTopic(Topic topic)
+    public async Task<int> UpdateTopic(int id, Topic topic)
     {
         using var connection = _database.Connect();
         const string sql = @"update topics
-                                set name = @Name
-                                  , description = @Description
+                                set id = @NewId
+                                  , name = @NewName
+                                  , description = @NewDescription
                               where id = @Id;";
         
         return await connection.ExecuteAsync(sql, 
             new 
             {
-                Name = topic.Name,
-                Description = topic.Description,
-                Id = topic.Id
+                Id = id,
+                NewName = topic.Name,
+                NewDescription = topic.Description,
+                NewId = topic.Id
             });
     }
 
