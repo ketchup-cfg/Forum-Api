@@ -34,9 +34,10 @@ public interface ITopics
     /// <summary>
     /// Update the information for an existing topic.
     /// </summary>
+    /// <param name="id">The identifier for the topic to update.</param>
     /// <param name="topic">The values to use to replace the existing topic's data with.</param>
     /// <returns>The number of topics updated successfully.</returns>
-    public Task<int> UpdateTopic(Topic topic);
+    public Task<int> UpdateTopic(int id, Topic topic);
 
     /// <summary>
     /// Delete a topic definition that matches the provided ID.
