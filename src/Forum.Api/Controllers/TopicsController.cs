@@ -120,4 +120,14 @@ public class TopicsController : ForumBaseController
 
         return numberOfTopicsUpdated == 0 ? NotFound() : NoContent();
     }
+
+    [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteTopic([FromRoute] int id)
+    {
+        var numberOfTopicsDeleted = await _topics.DeleteTopic(id);
+
+        return numberOfTopicsDeleted == 0 ? NotFound() : NoContent();
+    }
 }
