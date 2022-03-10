@@ -87,6 +87,20 @@ public class Topics : ITopics
             });
     }
 
+    public async Task<int> DeleteTopic(int id)
+    {
+        using var connection = _database.Connect();
+        const string sql = @"delete
+                               from topics
+                              where id = @Id;";
+
+        return await connection.ExecuteAsync(sql, 
+            new
+            {
+                Id = id
+            });
+    }
+    
     public async Task<int> RemoveAll()
     {
         using var connection = _database.Connect();

@@ -239,6 +239,35 @@ public class TopicTests : IClassFixture<DatabaseFixture>
     }
 
     [Fact]
+    public async void DeleteTopic_TopicExists_DeletesOneTopic()
+    {
+        // Arrange
+        const int expected = 1;
+        var mockTopic = await _helpers.CreateMockTopic();
+        
+        // Act
+        var actual = await _topics.DeleteTopic(mockTopic.Id);
+        
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+    
+    [Fact]
+    public async void DeleteTopic_TopicDoesNotExist_DeletesZeroTopics()
+    {
+        // Arrange
+        const int expected = 0;
+        var mockTopic = await _helpers.CreateMockTopic();
+        _ = await _topics.RemoveAll();
+        
+        // Act
+        var actual = await _topics.DeleteTopic(mockTopic.Id);
+        
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
     public async void RemoveAll_AnySituation_RemovesAllTopics()
     {
         // Arrange
