@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Forum.Data\Forum.Data.csproj" />
+      <ProjectReference Include="..\..\src\Forum.Services\Forum.Services.csproj" />
     </ItemGroup>
 
 </Project>

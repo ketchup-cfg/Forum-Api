@@ -1,7 +1,6 @@
 using System.Reflection;
-using Forum.Data;
-using Forum.Data.Abstractions;
-using Forum.Data.Queries;
+using Forum.Services.Extensions;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,20 +19,24 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(options =>
 {
+    options.SwaggerDoc("v1", 
+        new OpenApiInfo
+        {
+            Title = "Forum API",
+            Version = "v1"
+        });
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 
-builder.Services.AddScoped<IDatabase, Database>();
-builder.Services.AddScoped<ITopics, Topics>();
+builder.Services.AddForumDataServices();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.UseExceptionHandler("/error");
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
