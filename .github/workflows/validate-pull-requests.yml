@@ -1,4 +1,4 @@
-name: Validate Pull Requests
+name: Validate Some Pull Requests
 
 on:
   pull_request:
@@ -31,15 +31,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Setup .NET
+      - name: Setup .NET for something
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
-      - name: Restore dependencies
+      - name: Restore some dependencies
         run: dotnet restore
-      - name: Build
+      - name: Build some app
         run: dotnet build --no-restore
-      - name: Test
+      - name: Test some stuff
         run: dotnet test --no-build --verbosity normal
         env:
           POSTGRES_PASSWORD: postgres
