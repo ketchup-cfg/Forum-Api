@@ -1,13 +1,13 @@
-using Forum.Data.Abstractions;
 using Forum.Data.Models;
+using Forum.Services.Abstractions;
 
 namespace Forum.Tests.Library.Helpers;
 
 public class TopicHelpers
 {
-    private readonly ITopics _topics;
+    private readonly ITopicsService _topics;
 
-    public TopicHelpers(ITopics topics)
+    public TopicHelpers(ITopicsService topics)
     {
         _topics = topics;
     }
@@ -24,8 +24,19 @@ public class TopicHelpers
             Name = Guid.NewGuid().ToString(),
             Description = description
         };
-        topic.Id = await _topics.CreateTopic(topic);
 
-        return topic;
+        return await _topics.AddTopic(topic);
+    }
+
+    /// <summary>
+    /// Create a set number of topics in the database to ensure that enough data exists for testing purposes.
+    /// </summary>
+    /// <param name="numberOfTopics">The number of topics to create.</param>
+    public async Task EnsureSetNumberOfTopicsExist(int numberOfTopics)
+    {
+        for (var i = 0; i <= numberOfTopics; i++)
+        {
+            _ = await CreateMockTopic();
+        }
     }
 }
