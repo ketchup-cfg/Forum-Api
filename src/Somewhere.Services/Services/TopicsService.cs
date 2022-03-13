@@ -88,7 +88,7 @@ public class TopicsService : ITopicsService
          * to return a large number of topics in an HTTP request.
          */
         limit = limit < 0 ? 0 : (limit > 30 ? 30 : limit);
-        
+
         /*
          * If page is negative or equal to 0, then set to 1.
          *
@@ -157,8 +157,9 @@ public class TopicsService : ITopicsService
         return await GetNewTopic(newId);
     }
 
-    public async Task UpdateTopic(int id, Topic topic)
+    public async Task<int> UpdateTopic(int id, Topic topic)
     {
+        var numberOfRecordsUpdated = 0;
         using var connection = _database.Connect();
         const string sql = @"update topics
                                 set id = @NewId
@@ -167,7 +168,7 @@ public class TopicsService : ITopicsService
                               where id = @Id;";
         try
         {
-            await connection.ExecuteAsync(sql, 
+            numberOfRecordsUpdated = await connection.ExecuteAsync(sql, 
                 new 
                 {
                     Id = id,
@@ -190,16 +191,18 @@ public class TopicsService : ITopicsService
         {
             throw new DuplicateTopicNameException();
         }
+
+        return numberOfRecordsUpdated;
     }
 
-    public async Task RemoveTopic(int id)
+    public async Task<int> RemoveTopic(int id)
     {
         using var connection = _database.Connect();
         const string sql = @"delete
                                from topics
                               where id = @Id;";
 
-        await connection.ExecuteAsync(sql, new {Id = id});
+        return await connection.ExecuteAsync(sql, new {Id = id});
     }
     
     private async Task<Topic> GetNewTopic(int id)
