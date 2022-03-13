@@ -87,11 +87,13 @@ public interface ITopicsService
     /// </summary>
     /// <param name="id">The identifier for the topic to update.</param>
     /// <param name="topic">The values to use to replace the existing topic's data with.</param>
-    public Task UpdateTopic(int id, Topic topic);
+    /// <returns>The number of topics updated.</returns>
+    public Task<int> UpdateTopic(int id, Topic topic);
     
     /// <summary>
     /// Delete a topic definition that matches the provided ID.
     /// </summary>
     /// <param name="id">The identifier for the topic to delete.</param>
-    public Task RemoveTopic(int id);
+    /// <returns>The number of topics deleted.</returns>
+    public Task<int> RemoveTopic(int id);
 }

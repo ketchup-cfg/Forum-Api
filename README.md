@@ -57,11 +57,15 @@ After the appsettings file has been configured, run `dotnet run` if still in the
 
 ## Running Unit Tests
 
-To run unit tests for the application, first, ensure that you have a PostgreSQL database configured, and that you have the following environment variables set to whatever values you would prefer for your test PostgreSQL system:
-- `POSTGRES_HOST`
-- `POSTGRES_PORT`
-- `POSTGRES_USER`
-- `POSTGRES_PASSWORD`
-- `POSTGRES_DB`
+To run unit tests for the application, first, ensure that you have a PostgreSQL configured, then navigate to the [/test/Somewhere.Testing.Library](https://github.com/ketchup-cfg/Somewhere/tree/main/test/Somewhere.Testing.Library) directory, and create a file named appsettings.Development.json.
+
+Then, add the following content in the file to point the application to a configured PostgreSQL database:
+```json
+{
+   "ConnectionStrings": {
+      "Somewhere": "<PostgreSQL Database Connection String>"
+   }
+}
+```
 
 Then, navigate to the root of the application file system and run `dotnet test` to run all unit tests for the application.

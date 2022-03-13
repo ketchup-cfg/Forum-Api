@@ -95,14 +95,9 @@ public class TopicsController : SomeBaseController
         [FromBody] Topic topic
         )
     {
-        if (!await _topics.TopicExists(id))
-        {
-            return NotFound();
-        }
-        
-        await _topics.UpdateTopic(id, topic);
+        var numberOfTopicsUpdated = await _topics.UpdateTopic(id, topic);
 
-        return NoContent();
+        return numberOfTopicsUpdated == 0 ? NotFound() : NoContent();
     }
 
     /// <summary>
@@ -114,13 +109,8 @@ public class TopicsController : SomeBaseController
     [ProducesResponseType(typeof(IDictionary<string, string>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteTopic([FromRoute] int id)
     {
-        if (!await _topics.TopicExists(id))
-        {
-            return NotFound();
-        }
-        
-        await _topics.RemoveTopic(id);
+        var numberOfTopicsRemoved = await _topics.RemoveTopic(id);
 
-        return NoContent();
+        return numberOfTopicsRemoved == 0 ? NotFound() : NoContent();
     }
 }

@@ -106,7 +106,7 @@ public class TopicServiceTests : IClassFixture<DatabaseFixture>
     public async void GetTopic_ById_TopicDoesNotExist_ReturnsNull(int id)
     {
         // Arrange
-        await _topics.RemoveTopic(id);
+        _ = await _topics.RemoveTopic(id);
         
         // Act
         var topic = await _topics.GetTopic(id);
@@ -136,7 +136,7 @@ public class TopicServiceTests : IClassFixture<DatabaseFixture>
     {
         // Arrange
         var mockTopic = await _helpers.CreateMockTopic(name);
-        await _topics.RemoveTopic(mockTopic.Id);
+        _ = await _topics.RemoveTopic(mockTopic.Id);
         
         // Act
         var foundTopic = await _topics.GetTopic(name);
@@ -212,18 +212,18 @@ public class TopicServiceTests : IClassFixture<DatabaseFixture>
     [InlineData("Just your average valid topic description")]
     [InlineData("")]
     [InlineData(null)]
-    public async void UpdateTopic_ValidDescription_UpdatesPersist(string validDescription)
+    public async void UpdateTopic_ValidDescription_UpdatesOneTopic(string validDescription)
     {
         // Arrange
-        var expected = await _helpers.CreateMockTopic();
-        expected.Description = validDescription;
+        const int expected = 1;
+        var mockTopic = await _helpers.CreateMockTopic();
 
         // Act
-         await _topics.UpdateTopic(expected.Id, expected);
-         var actual = await _topics.GetTopic(expected.Id);
-        
+        mockTopic.Description = validDescription;
+        var actual = await _topics.UpdateTopic(mockTopic.Id, mockTopic);
+
          // Assert
-        Assert.Equal(expected.Description, actual?.Description);
+        Assert.Equal(expected, actual);
     }
 
     [Theory]
@@ -235,7 +235,7 @@ public class TopicServiceTests : IClassFixture<DatabaseFixture>
 
         // Act
         mockTopic.Name = invalidName;
-        Func<Task> updateTopic = async () => await _topics.UpdateTopic(mockTopic.Id, mockTopic);
+        Func<Task> updateTopic = async () => _ = await _topics.UpdateTopic(mockTopic.Id, mockTopic);
 
         // Assert
         await Assert.ThrowsAsync<NullTopicNameException>(updateTopic);
@@ -250,39 +250,38 @@ public class TopicServiceTests : IClassFixture<DatabaseFixture>
 
         // Act
         mockTopic1.Name = mockTopic2.Name;
-        Func<Task> updateTopic = async () => await _topics.UpdateTopic(mockTopic1.Id, mockTopic1);
+        Func<Task> updateTopic = async () => _ = await _topics.UpdateTopic(mockTopic1.Id, mockTopic1);
 
         // Assert
         await Assert.ThrowsAsync<DuplicateTopicNameException>(updateTopic);
     }
     
     [Fact]
-    public async void UpdateTopic_NoChangesMade_ChangesPersist()
+    public async void UpdateTopic_NoChangesMade_UpdatesOneTopic()
     {
         // Arrange
-        var expected = await _helpers.CreateMockTopic();
+        const int expected = 1;
+        var mockTopic = await _helpers.CreateMockTopic();
 
         // Act
-        await _topics.UpdateTopic(expected.Id, expected);
-        var actual = await _topics.GetTopic(expected.Id);
+        var actual = await _topics.UpdateTopic(mockTopic.Id, mockTopic);
 
         // Assert
-        Assert.Equal(expected.Name, actual?.Name);
-        Assert.Equal(expected.Description, actual?.Description);
+        Assert.Equal(expected, actual);
     }
 
     [Fact]
-    public async void RemoveTopic_TopicExists_TopicCannotBeFound()
+    public async void RemoveTopic_TopicExists_RemovesOneTopic()
     {
         // Arrange
+        const int expected = 1;
         var mockTopic = await _helpers.CreateMockTopic();
         
         // Act
-        await _topics.RemoveTopic(mockTopic.Id);
-        var deletedTopic = await _topics.GetTopic(mockTopic.Id);
-        
+        var actual = await _topics.RemoveTopic(mockTopic.Id);
+
         // Assert
-        Assert.Null(deletedTopic);
+        Assert.Equal(expected, actual);
     }
     
     [Theory]
@@ -292,14 +291,16 @@ public class TopicServiceTests : IClassFixture<DatabaseFixture>
     [InlineData(-100)]
     [InlineData(-2000)]
     [InlineData(int.MinValue)]
-    public async void RemoveTopic_InvalidId_TopicCannotBeFound(int invalidId)
+    public async void RemoveTopic_TopicDoesNotExist_RemovesZeroTopics(int invalidId)
     {
+        // Arrange
+        const int expected = 0;
+
         // Act
-        await _topics.RemoveTopic(invalidId);
-        var deletedTopic = await _topics.GetTopic(invalidId);
+        var actual = await _topics.RemoveTopic(invalidId);
         
         // Assert
-        Assert.Null(deletedTopic);
+        Assert.Equal(expected, actual);
     }
 
     [Fact]
@@ -307,10 +308,10 @@ public class TopicServiceTests : IClassFixture<DatabaseFixture>
     {
         // Arrange
         const bool expected = true;
-        var topic = (await _topics.GetAllTopics()).First();
+        var mockTopic = (await _topics.GetAllTopics()).First();
         
         // Act
-        var actual = await _topics.TopicExists(topic.Id);
+        var actual = await _topics.TopicExists(mockTopic.Id);
         
         // Assert
         Assert.Equal(expected, actual);
@@ -321,11 +322,11 @@ public class TopicServiceTests : IClassFixture<DatabaseFixture>
     {
         // Arrange
         const bool expected = false;
-        var topic = (await _topics.GetAllTopics()).First();
-        await _topics.RemoveTopic(topic.Id);
+        var mockTopic = (await _topics.GetAllTopics()).First();
+        _ = await _topics.RemoveTopic(mockTopic.Id);
         
         // Act
-        var actual = await _topics.TopicExists(topic.Id);
+        var actual = await _topics.TopicExists(mockTopic.Id);
         
         // Assert
         Assert.Equal(expected, actual);
@@ -350,11 +351,11 @@ public class TopicServiceTests : IClassFixture<DatabaseFixture>
     {
         // Arrange
         const bool expected = false;
-        var topic = (await _topics.GetAllTopics()).First();
-        await _topics.RemoveTopic(topic.Id);
+        var mockTopic = (await _topics.GetAllTopics()).First();
+        _ = await _topics.RemoveTopic(mockTopic.Id);
         
         // Act
-        var actual = await _topics.TopicExists(topic.Name);
+        var actual = await _topics.TopicExists(mockTopic.Name);
         
         // Assert
         Assert.Equal(expected, actual);
@@ -423,13 +424,13 @@ public class TopicServiceTests : IClassFixture<DatabaseFixture>
     {
         // Arrange
         const bool expected = true;
-        var topic = (await _topics.GetAllTopics()).First();
-        var topicId = topic.Id;
-        topic.Id = (await _topics.GetAllTopics()).Last().Id;
-        await _topics.RemoveTopic(topic.Id);
+        var mockTopic = (await _topics.GetAllTopics()).First();
+        var originalTopicId = mockTopic.Id;
+        mockTopic.Id = (await _topics.GetAllTopics()).Last().Id;
+        _ = await _topics.RemoveTopic(mockTopic.Id);
         
         // Act
-        var actual = await _topics.NewIdIsUnique(topicId, topic.Id);
+        var actual = await _topics.NewIdIsUnique(originalTopicId, mockTopic.Id);
         
         // Assert
         Assert.Equal(expected, actual);
@@ -440,12 +441,12 @@ public class TopicServiceTests : IClassFixture<DatabaseFixture>
     {
         // Arrange
         const bool expected = false;
-        var topic = (await _topics.GetAllTopics()).First();
-        var topicId = topic.Id;
-        topic.Id = (await _topics.GetAllTopics()).Last().Id;
+        var mockTopic = (await _topics.GetAllTopics()).First();
+        var originalTopicId = mockTopic.Id;
+        mockTopic.Id = (await _topics.GetAllTopics()).Last().Id;
 
         // Act
-        var actual = await _topics.NewIdIsUnique(topicId, topic.Id);
+        var actual = await _topics.NewIdIsUnique(originalTopicId, mockTopic.Id);
         
         // Assert
         Assert.Equal(expected, actual);
