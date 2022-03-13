@@ -13,6 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Content Include="appsettings.GitHub.json" CopyToOutputDirectory="PreserveNewest" />
         <Content Include="appsettings.Development.json" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
