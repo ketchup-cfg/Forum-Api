@@ -1,26 +1,21 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Somewhere.Data.Models;
 using Somewhere.Services.Exceptions;
-using Somewhere.Services.Services;
-using Somewhere.Testing.Library.Fixtures;
-using Somewhere.Testing.Library.Helpers;
-using Npgsql;
+using Somewhere.Services.Abstractions;
+using Somewhere.Testing.Mocks;
 using Xunit;
 
 namespace Somewhere.Services.Tests.Services;
 
-public class TopicServiceTests : IClassFixture<DatabaseFixture>
+public class TopicServiceTests
 {
-    private readonly TopicsService _topics;
-    private readonly TopicHelpers _helpers;
+    private readonly ITopicsService _topics;
 
-    public TopicServiceTests(DatabaseFixture fixture)
+    public TopicServiceTests()
     {
-        _topics = new TopicsService(fixture.Database);
-        _helpers = new TopicHelpers(_topics);
-        _helpers.EnsureSetNumberOfTopicsExist(100);
+        var mockTopicsService = MockTopicsService.GenerateMockTopicsService();
+        _topics = mockTopicsService.Object;
     }
 
     [Fact]
@@ -90,36 +85,53 @@ public class TopicServiceTests : IClassFixture<DatabaseFixture>
     }
     
     [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(5)]
+    [InlineData(10)]
+    [InlineData(40)]
+    [InlineData(60)]
+    public async void GetTopic_ById_TopicDoesExist_ReturnsRequestedTopic(int id)
+    {
+        // Arrange
+        var expected = id;
+        // Act
+        var actual = (await _topics.GetTopic(id))!.Id;
+
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+    
+    [Theory]
     [InlineData(int.MinValue)]
     [InlineData(-2000)]
     [InlineData(-100)]
     [InlineData(-10)]
     [InlineData(-2)]
     [InlineData(-1)]
-    [InlineData(0)]
-    [InlineData(1)]
-    [InlineData(2)]
-    [InlineData(10)]
     [InlineData(100)]
     [InlineData(2000)]
     [InlineData(int.MaxValue)]
     public async void GetTopic_ById_TopicDoesNotExist_ReturnsNull(int id)
     {
-        // Arrange
-        _ = await _topics.RemoveTopic(id);
-        
         // Act
         var topic = await _topics.GetTopic(id);
 
         // Assert
         Assert.Null(topic);
     }
-    
-    [Fact]
-    public async void GetTopic_ByName_TopicDoesExist_ReturnsRequestedTopic()
+
+    [Theory]
+    [InlineData("0")]
+    [InlineData("1")]
+    [InlineData("5")]
+    [InlineData("10")]
+    [InlineData("40")]
+    [InlineData("60")]
+    public async void GetTopic_ByName_TopicDoesExist_ReturnsRequestedTopic(string name)
     {
         // Arrange
-        var expected = (await _helpers.CreateMockTopic()).Name;
+        var expected = name;
 
         // Act
         var actual = (await _topics.GetTopic(expected))!.Name;
@@ -129,15 +141,16 @@ public class TopicServiceTests : IClassFixture<DatabaseFixture>
     }
     
     [Theory]
-    [InlineData("Test Topic")]
-    [InlineData("")]
-    [InlineData(null)]
+    [InlineData("-2000")]
+    [InlineData("-100")]
+    [InlineData("-10")]
+    [InlineData("-2")]
+    [InlineData("-1")]
+    [InlineData("100")]
+    [InlineData("2000")]
+
     public async void GetTopic_ByName_TopicDoesNotExist_ReturnsNull(string name)
     {
-        // Arrange
-        var mockTopic = await _helpers.CreateMockTopic(name);
-        _ = await _topics.RemoveTopic(mockTopic.Id);
-        
         // Act
         var foundTopic = await _topics.GetTopic(name);
 
@@ -150,135 +163,111 @@ public class TopicServiceTests : IClassFixture<DatabaseFixture>
     [InlineData("Testdsgsdgsd", null)]
     [InlineData("A good name for a topic", "I agree fully")]
     [InlineData("AH BEES", "🐝")]
-    public async void AddTopic_ValidNameAndValidDescription_ReturnsNewTopic(string validName, string validDescription)
+    public async void AddTopic_ValidNameAndValidDescription_ReturnsNewTopic(string name, string description)
     {
         // Arrange
-        var newTopic = new Topic
-        {
-            Name = validName,
-            Description = validDescription
-        };
-        
+        var mockTopic = MockTopic.Create(name: name, description: description);
+
         // Act
-        var createdTopic = await _topics.AddTopic(newTopic);
+        var createdTopic = await _topics.AddTopic(mockTopic);
 
         // Assert
-        Assert.Equal(newTopic.Name, createdTopic.Name);
-        Assert.Equal(newTopic.Description, createdTopic.Description);
+        Assert.Equal(mockTopic.Name, createdTopic.Name);
+        Assert.Equal(mockTopic.Description, createdTopic.Description);
+    }
+
+    [Theory]
+    [InlineData("0", "")]
+    [InlineData("1", null)]
+    [InlineData("2", "I agree fully")]
+    [InlineData("3", "🐝")]
+    public async void AddTopic_NameAlreadyExists_ThrowsDuplicateTopicNameException(string name, string? description)
+    {
+        // Arrange
+        var topic = MockTopic.Create(name: name, description: description);
+
+        // Act
+        Func<Task> addTopic = async () => _ = await _topics.AddTopic(topic);
+
+        // Assert
+        await Assert.ThrowsAsync<DuplicateTopicNameException>(addTopic);
     }
     
     [Theory]
-    [InlineData(null, "")]
-    [InlineData(null, null)]
-    [InlineData(null, "I agree fully")]
-    [InlineData(null, "🐝")]
-    public async void AddTopic_NullNameAndValidDescription_ThrowsNotNullException(string invalidName, string validDescription)
-    {
-        // Arrange
-        const string expected = PostgresErrorCodes.NotNullViolation;
-        var newTopic = new Topic
-        {
-            Name = invalidName,
-            Description = validDescription
-        };
-        Func<Task<Topic>> createTopic = async () => await _topics.AddTopic(newTopic);
-        
-        // Act
-        var actual = (await Record.ExceptionAsync(createTopic) as PostgresException)!.SqlState;
-
-        // Assert
-        Assert.Equal(expected, actual);
-    }
-    
-    [Fact]
-    public async void AddTopic_NameAlreadyExists_ThrowsUniqueException()
-    {
-        // Arrange
-        const string expected = PostgresErrorCodes.UniqueViolation;
-        var mockTopic = await _helpers.CreateMockTopic();
-        Func<Task<Topic>> createTopic = async () => await _topics.AddTopic(mockTopic);
-        
-        // Act
-        var actual = (await Record.ExceptionAsync(createTopic) as PostgresException)!.SqlState;
-
-        // Assert
-        Assert.Equal(expected, actual);
-    }
-    
-    [Theory]
-    [InlineData("Test")]
-    [InlineData("Elbows")]
-    [InlineData("fdsfds")]
-    [InlineData("Just your average valid topic description")]
-    [InlineData("")]
-    [InlineData(null)]
-    public async void UpdateTopic_ValidDescription_UpdatesOneTopic(string validDescription)
+    [InlineData(0, "Test")]
+    [InlineData(1, "Elbows")]
+    [InlineData(5, "fdsfds")]
+    [InlineData(10, "Just your average valid topic description")]
+    [InlineData(40, "")]
+    [InlineData(60, null)]
+    public async void UpdateTopic_ValidIdAndValidDescription_UpdatesOneTopic(int id, string description)
     {
         // Arrange
         const int expected = 1;
-        var mockTopic = await _helpers.CreateMockTopic();
+        var topic = await _topics.GetTopic(id);
 
         // Act
-        mockTopic.Description = validDescription;
-        var actual = await _topics.UpdateTopic(mockTopic.Id, mockTopic);
+        topic!.Description = description;
+        var actual = await _topics.UpdateTopic(id, topic);
 
          // Assert
         Assert.Equal(expected, actual);
     }
 
     [Theory]
-    [InlineData(null)]
-    public async void UpdateTopic_NullName_ThrowsNullTopicNameException(string invalidName)
+    [InlineData(0, "1")]
+    [InlineData(1, "0")]
+    [InlineData(5, "3")]
+    [InlineData(10, "5")]
+    [InlineData(40, "10")]
+    [InlineData(60, "40")]
+    public async void UpdateTopic_NameAlreadyExists_ThrowsDuplicateNameException(int id, string name)
     {
         // Arrange
-        var mockTopic = await _helpers.CreateMockTopic();
+        var topic = await _topics.GetTopic(id);
 
         // Act
-        mockTopic.Name = invalidName;
-        Func<Task> updateTopic = async () => _ = await _topics.UpdateTopic(mockTopic.Id, mockTopic);
-
-        // Assert
-        await Assert.ThrowsAsync<NullTopicNameException>(updateTopic);
-    }
-
-    [Fact]
-    public async void UpdateTopic_NameAlreadyExists_ThrowsDuplicateNameException()
-    {
-        // Arrange
-        var mockTopic1 = await _helpers.CreateMockTopic();
-        var mockTopic2 = await _helpers.CreateMockTopic();
-
-        // Act
-        mockTopic1.Name = mockTopic2.Name;
-        Func<Task> updateTopic = async () => _ = await _topics.UpdateTopic(mockTopic1.Id, mockTopic1);
+        topic!.Name = name;
+        Func<Task> updateTopic = async () => _ = await _topics.UpdateTopic(id, topic);
 
         // Assert
         await Assert.ThrowsAsync<DuplicateTopicNameException>(updateTopic);
     }
     
-    [Fact]
-    public async void UpdateTopic_NoChangesMade_UpdatesOneTopic()
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(5)]
+    [InlineData(10)]
+    [InlineData(40)]
+    [InlineData(60)]
+    public async void UpdateTopic_NoChangesMade_UpdatesOneTopic(int id)
     {
         // Arrange
         const int expected = 1;
-        var mockTopic = await _helpers.CreateMockTopic();
+        var topic = await _topics.GetTopic(id);
 
         // Act
-        var actual = await _topics.UpdateTopic(mockTopic.Id, mockTopic);
+        var actual = await _topics.UpdateTopic(id, topic!);
 
         // Assert
         Assert.Equal(expected, actual);
     }
 
-    [Fact]
-    public async void RemoveTopic_TopicExists_RemovesOneTopic()
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(5)]
+    [InlineData(10)]
+    [InlineData(40)]
+    [InlineData(60)]
+    public async void RemoveTopic_TopicExists_RemovesOneTopic(int id)
     {
         // Arrange
         const int expected = 1;
-        var mockTopic = await _helpers.CreateMockTopic();
-        
+
         // Act
-        var actual = await _topics.RemoveTopic(mockTopic.Id);
+        var actual = await _topics.RemoveTopic(id);
 
         // Assert
         Assert.Equal(expected, actual);
@@ -291,162 +280,13 @@ public class TopicServiceTests : IClassFixture<DatabaseFixture>
     [InlineData(-100)]
     [InlineData(-2000)]
     [InlineData(int.MinValue)]
-    public async void RemoveTopic_TopicDoesNotExist_RemovesZeroTopics(int invalidId)
+    public async void RemoveTopic_TopicDoesNotExist_RemovesZeroTopics(int id)
     {
         // Arrange
         const int expected = 0;
 
         // Act
-        var actual = await _topics.RemoveTopic(invalidId);
-        
-        // Assert
-        Assert.Equal(expected, actual);
-    }
-
-    [Fact]
-    public async void TopicExists_ById_TopicActuallyExists_ReturnsTrue()
-    {
-        // Arrange
-        const bool expected = true;
-        var mockTopic = (await _topics.GetAllTopics()).First();
-        
-        // Act
-        var actual = await _topics.TopicExists(mockTopic.Id);
-        
-        // Assert
-        Assert.Equal(expected, actual);
-    }
-    
-    [Fact]
-    public async void TopicExists_ById_TopicDoesNotExist_ReturnsFalse()
-    {
-        // Arrange
-        const bool expected = false;
-        var mockTopic = (await _topics.GetAllTopics()).First();
-        _ = await _topics.RemoveTopic(mockTopic.Id);
-        
-        // Act
-        var actual = await _topics.TopicExists(mockTopic.Id);
-        
-        // Assert
-        Assert.Equal(expected, actual);
-    }
-    
-    [Fact]
-    public async void TopicExists_ByName_TopicActuallyExists_ReturnsTrue()
-    {
-        // Arrange
-        const bool expected = true;
-        var topic = (await _topics.GetAllTopics()).First();
-        
-        // Act
-        var actual = await _topics.TopicExists(topic.Name);
-        
-        // Assert
-        Assert.Equal(expected, actual);
-    }
-    
-    [Fact]
-    public async void TopicExists_ByName_TopicDoesNotExist_ReturnsFalse()
-    {
-        // Arrange
-        const bool expected = false;
-        var mockTopic = (await _topics.GetAllTopics()).First();
-        _ = await _topics.RemoveTopic(mockTopic.Id);
-        
-        // Act
-        var actual = await _topics.TopicExists(mockTopic.Name);
-        
-        // Assert
-        Assert.Equal(expected, actual);
-    }
-
-    [Fact]
-    public async void NameIsUnique_NameIsActuallyUnique_ReturnsTrue()
-    {
-        // Arrange
-        const bool expected = true;
-        var name = Guid.NewGuid().ToString();
-        
-        // Act
-        var actual = await _topics.NameIsUnique(name);
-        
-        // Assert
-        Assert.Equal(expected, actual);
-    }
-    
-    [Fact]
-    public async void NameIsUnique_NameIsNotUnique_ReturnsFalse()
-    {
-        // Arrange
-        const bool expected = false;
-        var topic = (await _topics.GetAllTopics()).First();
-        
-        // Act
-        var actual = await _topics.NameIsUnique(topic.Name);
-        
-        // Assert
-        Assert.Equal(expected, actual);
-    }
-
-    [Fact]
-    public async void NewNameIsUnique_NameIsUnique_ReturnsTrue()
-    {
-        // Arrange
-        const bool expected = true;
-        var topic = (await _topics.GetAllTopics()).First();
-        topic.Name = Guid.NewGuid().ToString();
-        
-        // Act
-        var actual = await _topics.NewNameIsUnique(topic.Id, topic.Name);
-        
-        // Assert
-        Assert.Equal(expected, actual);
-    }
-    
-    [Fact]
-    public async void NewNameIsUnique_NameIsNotUnique_ReturnsFalse()
-    {
-        // Arrange
-        const bool expected = false;
-        var topic = (await _topics.GetAllTopics()).First();
-        topic.Name = (await _topics.GetAllTopics()).Last().Name;
-
-        // Act
-        var actual = await _topics.NewNameIsUnique(topic.Id, topic.Name);
-        
-        // Assert
-        Assert.Equal(expected, actual);
-    }
-    
-    [Fact]
-    public async void NewIdIsUnique_IdIsUnique_ReturnsTrue()
-    {
-        // Arrange
-        const bool expected = true;
-        var mockTopic = (await _topics.GetAllTopics()).First();
-        var originalTopicId = mockTopic.Id;
-        mockTopic.Id = (await _topics.GetAllTopics()).Last().Id;
-        _ = await _topics.RemoveTopic(mockTopic.Id);
-        
-        // Act
-        var actual = await _topics.NewIdIsUnique(originalTopicId, mockTopic.Id);
-        
-        // Assert
-        Assert.Equal(expected, actual);
-    }
-    
-    [Fact]
-    public async void NewIdIsUnique_IdIsNotUnique_ReturnsFalse()
-    {
-        // Arrange
-        const bool expected = false;
-        var mockTopic = (await _topics.GetAllTopics()).First();
-        var originalTopicId = mockTopic.Id;
-        mockTopic.Id = (await _topics.GetAllTopics()).Last().Id;
-
-        // Act
-        var actual = await _topics.NewIdIsUnique(originalTopicId, mockTopic.Id);
+        var actual = await _topics.RemoveTopic(id);
         
         // Assert
         Assert.Equal(expected, actual);
