@@ -9,7 +9,7 @@ namespace Somewhere.Testing.Data;
 public class TestDatabase : IDatabase
 {
     private readonly string _connectionString;
-    
+
     public TestDatabase(IConfiguration config)
     {
         _connectionString = config.GetConnectionString("Somewhere") ?? throw new InvalidOperationException();
@@ -25,7 +25,7 @@ public class TestDatabase : IDatabase
         DropTopicsTable();
         CreateTopicsTable();
     }
-    
+
     /// <summary>
     /// Drop the topics table from the application database.
     /// </summary>

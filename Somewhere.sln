@@ -11,9 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{E96FD598-6
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Somewhere.Testing", "test\Somewhere.Testing\Somewhere.Testing.csproj", "{A4620D85-A3D9-4EEB-ADF2-60ADAE7BD779}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Somewhere.Services", "src\Somewhere.Services\Somewhere.Services.csproj", "{43930564-61B4-4D4D-92A4-A07D64CDA9D0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Somewhere.Core", "src\Somewhere.Core\Somewhere.Core.csproj", "{43930564-61B4-4D4D-92A4-A07D64CDA9D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Somewhere.Services.Tests", "test\Somewhere.Services.Tests\Somewhere.Services.Tests.csproj", "{3F748965-3B87-4775-B11C-30547341E4C0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Somewhere.Core.Tests", "test\Somewhere.Core.Tests\Somewhere.Core.Tests.csproj", "{3F748965-3B87-4775-B11C-30547341E4C0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Somewhere.Api.Tests", "test\Somewhere.Api.Tests\Somewhere.Api.Tests.csproj", "{29F2D6F6-E8BD-4703-B3BF-4E2D5B36B6A2}"
 EndProject

@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Somewhere.Services.Exceptions;
-using Somewhere.Services.Abstractions;
+using Somewhere.Core.Exceptions;
+using Somewhere.Core.Abstractions;
 using Somewhere.Testing.Mocks;
 using Xunit;
 
-namespace Somewhere.Services.Tests.Services;
+namespace Somewhere.Core.Tests.Services;
 
 public class TopicServiceTests
 {
@@ -30,7 +30,7 @@ public class TopicServiceTests
         // Assert
         Assert.Equal(expected, actual);
     }
-    
+
     [Theory]
     [InlineData(0)]
     [InlineData(1)]
@@ -65,7 +65,7 @@ public class TopicServiceTests
         // Assert
         Assert.Equal(expected, actual);
     }
-    
+
     [Theory]
     [InlineData(31)]
     [InlineData(40)]
@@ -83,7 +83,7 @@ public class TopicServiceTests
         // Assert
         Assert.Equal(expected, actual);
     }
-    
+
     [Theory]
     [InlineData(0)]
     [InlineData(1)]
@@ -101,7 +101,7 @@ public class TopicServiceTests
         // Assert
         Assert.Equal(expected, actual);
     }
-    
+
     [Theory]
     [InlineData(int.MinValue)]
     [InlineData(-2000)]
@@ -139,7 +139,7 @@ public class TopicServiceTests
         // Assert
         Assert.Equal(expected, actual);
     }
-    
+
     [Theory]
     [InlineData("-2000")]
     [InlineData("-100")]
@@ -148,7 +148,6 @@ public class TopicServiceTests
     [InlineData("-1")]
     [InlineData("100")]
     [InlineData("2000")]
-
     public async void GetTopic_ByName_TopicDoesNotExist_ReturnsNull(string name)
     {
         // Act
@@ -192,7 +191,7 @@ public class TopicServiceTests
         // Assert
         await Assert.ThrowsAsync<DuplicateTopicNameException>(addTopic);
     }
-    
+
     [Theory]
     [InlineData(0, "Test")]
     [InlineData(1, "Elbows")]
@@ -210,7 +209,7 @@ public class TopicServiceTests
         topic!.Description = description;
         var actual = await _topics.UpdateTopic(id, topic);
 
-         // Assert
+        // Assert
         Assert.Equal(expected, actual);
     }
 
@@ -233,7 +232,7 @@ public class TopicServiceTests
         // Assert
         await Assert.ThrowsAsync<DuplicateTopicNameException>(updateTopic);
     }
-    
+
     [Theory]
     [InlineData(0)]
     [InlineData(1)]
@@ -272,7 +271,7 @@ public class TopicServiceTests
         // Assert
         Assert.Equal(expected, actual);
     }
-    
+
     [Theory]
     [InlineData(-1)]
     [InlineData(-2)]
@@ -287,7 +286,7 @@ public class TopicServiceTests
 
         // Act
         var actual = await _topics.RemoveTopic(id);
-        
+
         // Assert
         Assert.Equal(expected, actual);
     }

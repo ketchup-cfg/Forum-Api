@@ -1,5 +1,5 @@
 using Somewhere.Data.Models;
-using Somewhere.Services.Abstractions;
+using Somewhere.Core.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 

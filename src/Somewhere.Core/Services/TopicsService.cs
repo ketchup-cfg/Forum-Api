@@ -2,10 +2,10 @@ using Dapper;
 using Somewhere.Data.Abstractions;
 using Somewhere.Data.Models;
 using Npgsql;
-using Somewhere.Services.Abstractions;
-using Somewhere.Services.Exceptions;
+using Somewhere.Core.Abstractions;
+using Somewhere.Core.Exceptions;
 
-namespace Somewhere.Services.Services;
+namespace Somewhere.Core.Services;
 
 public class TopicsService : ITopicsService
 {
@@ -15,7 +15,7 @@ public class TopicsService : ITopicsService
     {
         _database = database;
     }
-    
+
     public async Task<bool> TopicExists(int id)
     {
         using var connection = _database.Connect();
@@ -96,9 +96,9 @@ public class TopicsService : ITopicsService
          * the query, which is not valid.
          */
         page = page <= 0 ? 1 : page;
-        
+
         var numberOfTopicsToSkip = (page - 1) * limit;
-        
+
         using var connection = _database.Connect();
         const string sql = @"select id          as Id
                                   , name        as Name
@@ -107,7 +107,7 @@ public class TopicsService : ITopicsService
                              order by name
                              limit @Limit offset @Offset";
 
-        return await connection.QueryAsync<Topic>(sql, 
+        return await connection.QueryAsync<Topic>(sql,
             new
             {
                 Limit = limit,
@@ -151,12 +151,12 @@ public class TopicsService : ITopicsService
                                 @Description
                              )
                              returning Id;";
-        
+
         var newId = await connection.ExecuteScalarAsync<int>(sql, new {topic.Name, topic.Description});
 
         return await GetNewTopic(newId);
     }
-
+    
     public async Task<int> UpdateTopic(int id, Topic topic)
     {
         var numberOfRecordsUpdated = 0;
@@ -168,8 +168,8 @@ public class TopicsService : ITopicsService
                               where id = @Id;";
         try
         {
-            numberOfRecordsUpdated = await connection.ExecuteAsync(sql, 
-                new 
+            numberOfRecordsUpdated = await connection.ExecuteAsync(sql,
+                new
                 {
                     Id = id,
                     NewName = topic.Name,
@@ -204,7 +204,7 @@ public class TopicsService : ITopicsService
 
         return await connection.ExecuteAsync(sql, new {Id = id});
     }
-    
+
     private async Task<Topic> GetNewTopic(int id)
     {
         using var connection = _database.Connect();

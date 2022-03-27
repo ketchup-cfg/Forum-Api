@@ -1,6 +1,6 @@
 using Somewhere.Data.Models;
 
-namespace Somewhere.Services.Abstractions;
+namespace Somewhere.Core.Abstractions;
 
 public interface ITopicsService
 {
@@ -10,7 +10,7 @@ public interface ITopicsService
     /// <param name="id">The unique ID for the topic.</param>
     /// <returns>True if a topic is found matching the provided ID, false if no topic if found.</returns>
     public Task<bool> TopicExists(int id);
-    
+
     /// <summary>
     /// Check to see if a topic exists that matches the given name.
     /// </summary>
@@ -28,7 +28,7 @@ public interface ITopicsService
     /// topic.
     /// </returns>
     public Task<bool> NameIsUnique(string name);
-    
+
     /// <summary>
     /// Check to see if the new name for the existing topic is unique or if another topic already exists that matches
     /// the given name.
@@ -40,7 +40,7 @@ public interface ITopicsService
     /// topic.
     /// </returns>
     public Task<bool> NewNameIsUnique(int id, string newName);
-    
+
     /// <summary>
     /// Check to see if the new ID for the existing topic is unique or if another topic already exists that matches
     /// the given ID.
@@ -52,7 +52,7 @@ public interface ITopicsService
     /// topic.
     /// </returns>
     public Task<bool> NewIdIsUnique(int id, int newId);
-    
+
     /// <summary>
     /// Find and return a collection of all existing topics.
     /// </summary>
@@ -60,21 +60,21 @@ public interface ITopicsService
     /// <param name="page">Which set of topics to return for the given limit.</param> 
     /// <returns>The collection of existing topics.</returns>
     public Task<IEnumerable<Topic>> GetAllTopics(int limit = 30, int page = 1);
-    
+
     /// <summary>
     /// Find and return a single topic using the provided topic ID.
     /// </summary>
     /// <param name="id">The identifier for the topic to retrieve.</param>
     /// <returns>The topic associated with the provided ID, if found. Otherwise, a null value if not found.</returns>
     public Task<Topic?> GetTopic(int id);
-    
+
     /// <summary>
     /// Find and return a single topic using the provided topic name.
     /// </summary>
     /// <param name="name">The unique name for the topic to retrieve.</param>
     /// <returns>The topic associated with the provided name, if found. Otherwise, a null value if not found.</returns>
     public Task<Topic?> GetTopic(string name);
-    
+
     /// <summary>
     /// Create a new topic and return the newly created topic.
     /// </summary>
@@ -88,8 +88,17 @@ public interface ITopicsService
     /// <param name="id">The identifier for the topic to update.</param>
     /// <param name="topic">The values to use to replace the existing topic's data with.</param>
     /// <returns>The number of topics updated.</returns>
+    /// <exception cref="Somewhere.Core.Exceptions.DuplicateIdException">
+    /// Thrown if the new ID for the topic is already defined for another topic.
+    /// </exception>
+    /// <exception cref="Somewhere.Core.Exceptions.DuplicateTopicNameException">
+    /// Thrown if the new name for the topic is already defined for another topic.
+    /// </exception>
+    /// <exception cref="Somewhere.Core.Exceptions.NullTopicNameException">
+    /// Thrown if the new name for the topic is null.
+    /// </exception>
     public Task<int> UpdateTopic(int id, Topic topic);
-    
+
     /// <summary>
     /// Delete a topic definition that matches the provided ID.
     /// </summary>

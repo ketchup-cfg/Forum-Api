@@ -1,10 +1,10 @@
 using Somewhere.Data;
 using Somewhere.Data.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
-using Somewhere.Services.Abstractions;
-using Somewhere.Services.Services;
+using Somewhere.Core.Abstractions;
+using Somewhere.Core.Services;
 
-namespace Somewhere.Services.Extensions;
+namespace Somewhere.Core.Extensions;
 
 public static class ServiceCollectionExtensions
 {

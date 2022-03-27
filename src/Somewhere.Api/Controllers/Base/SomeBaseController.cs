@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace Somewhere.Api.Controllers.Base;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
 [Produces("application/json")]
 [EnableCors]
-public abstract class SomeBaseController : ControllerBase { }
+public abstract class SomeBaseController : ControllerBase
+{
+}
