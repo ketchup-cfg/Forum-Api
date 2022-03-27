@@ -1,8 +1,8 @@
 using System.Text.RegularExpressions;
 using Moq;
 using Somewhere.Data.Models;
-using Somewhere.Services.Abstractions;
-using Somewhere.Services.Exceptions;
+using Somewhere.Core.Abstractions;
+using Somewhere.Core.Exceptions;
 using Range = Moq.Range;
 
 namespace Somewhere.Testing.Mocks;
@@ -10,16 +10,16 @@ namespace Somewhere.Testing.Mocks;
 public static class MockTopicsService
 {
     private static readonly IEnumerable<Topic> Topics = MockTopic.CreateMany(MockTopic.MaxTopicId);
-    
+
     private const string TwoPositiveDigitsPattern = @"^\d{1,2}$";
     private const string NotTwoPositiveDigitsPattern = @"^.*(?<!\d{1,2})(?!\d{1,2}).*$";
 
     private const int SuccessfulNumberOfUpdates = 1;
     private const int UnsuccessfulNumberOfUpdates = 0;
-    
+
     private const int SuccessfulNumberOfDeletes = 1;
     private const int UnsuccessfulNumberOfDeletes = 0;
-    
+
     public static Mock<ITopicsService> GenerateMockTopicsService()
     {
         var mock = new Mock<ITopicsService>();
@@ -29,17 +29,17 @@ public static class MockTopicsService
          */
         mock.Setup(service =>
                 service.GetAllTopics(
-                        It.IsInRange(MockTopic.MinTopicId, MockTopic.MaxTopicsPerPage, Range.Inclusive), 
+                        It.IsInRange(MockTopic.MinTopicId, MockTopic.MaxTopicsPerPage, Range.Inclusive),
                         It.IsAny<int>())
                     .Result)
             .Returns((int limit, int _) => Topics.Take(limit));
-        
+
         /*
          * Setup GetAllTopics to return 30 topics if called with a limit that is greater than 30.
          */
         mock.Setup(service =>
                 service.GetAllTopics(
-                        It.IsInRange(MockTopic.MaxTopicsPerPage, int.MaxValue, Range.Inclusive), 
+                        It.IsInRange(MockTopic.MaxTopicsPerPage, int.MaxValue, Range.Inclusive),
                         It.IsAny<int>())
                     .Result)
             .Returns(Topics.Take(MockTopic.MaxTopicsPerPage));
@@ -61,7 +61,7 @@ public static class MockTopicsService
                 service.GetTopic(It.IsInRange(MockTopic.MinTopicId, MockTopic.MaxTopicId, Range.Inclusive))
                     .Result)
             .Returns((int id) => MockTopic.Create(id));
-        
+
         /*
          * Setup GetTopic to return a null topic reference if called with an invalid ID that is lower that the minimum
          * topic ID value.
@@ -83,8 +83,8 @@ public static class MockTopicsService
          */
         mock.Setup(service =>
                 service.GetTopic(It.IsRegex(TwoPositiveDigitsPattern)))
-            .ReturnsAsync((string name) => MockTopic.Create(name:name));
-        
+            .ReturnsAsync((string name) => MockTopic.Create(name: name));
+
         /*
          * Setup GetTopic to return a null topic reference if called with an invalid name.
          */
@@ -106,7 +106,7 @@ public static class MockTopicsService
                 {
                     throw new DuplicateTopicNameException();
                 }
-                
+
                 return MockTopic.Create(1, newTopic.Name, newTopic.Description);
             });
 
@@ -119,7 +119,7 @@ public static class MockTopicsService
          */
         mock.Setup(service =>
                 service.UpdateTopic(
-                        It.IsInRange(MockTopic.MinTopicId, MockTopic.MaxTopicId, Range.Inclusive), 
+                        It.IsInRange(MockTopic.MinTopicId, MockTopic.MaxTopicId, Range.Inclusive),
                         It.IsAny<Topic>())
                     .Result)
             .Returns((int id, Topic updatedTopic) =>
@@ -128,7 +128,7 @@ public static class MockTopicsService
                 {
                     throw new DuplicateIdException();
                 }
-                
+
                 if (id.ToString() != updatedTopic.Name && Regex.IsMatch(updatedTopic.Name, TwoPositiveDigitsPattern))
                 {
                     throw new DuplicateTopicNameException();
@@ -136,23 +136,23 @@ public static class MockTopicsService
 
                 return SuccessfulNumberOfUpdates;
             });
-        
+
         /*
          * Setup UpdateTopic to return the number 0 if a topic is passed in for an ID that does not exist.
          */
         mock.Setup(service =>
                 service.UpdateTopic(
-                        It.IsInRange(int.MinValue, MockTopic.MinTopicId - 1, Range.Inclusive), 
+                        It.IsInRange(int.MinValue, MockTopic.MinTopicId - 1, Range.Inclusive),
                         It.IsAny<Topic>())
                     .Result)
             .Returns(UnsuccessfulNumberOfUpdates);
-        
+
         /*
          * Setup UpdateTopic to return the number 0 if a topic is passed in for an ID that does not exist.
          */
         mock.Setup(service =>
                 service.UpdateTopic(
-                        It.IsInRange(MockTopic.MaxTopicId + 1, int.MaxValue, Range.Inclusive), 
+                        It.IsInRange(MockTopic.MaxTopicId + 1, int.MaxValue, Range.Inclusive),
                         It.IsAny<Topic>())
                     .Result)
             .Returns(UnsuccessfulNumberOfUpdates);
@@ -161,10 +161,10 @@ public static class MockTopicsService
          * Setup RemoveTopic to return the number 1 if a valid topic ID is passed in.
          */
         mock.Setup(service =>
-            service.RemoveTopic(It.IsInRange(0, MockTopic.MaxTopicId, Range.Inclusive))
-                .Result)
+                service.RemoveTopic(It.IsInRange(0, MockTopic.MaxTopicId, Range.Inclusive))
+                    .Result)
             .Returns(SuccessfulNumberOfDeletes);
-        
+
         /*
          * Setup RemoveTopic to return the number 0 if an invalid topic ID is passed in.
          */
@@ -172,7 +172,7 @@ public static class MockTopicsService
                 service.RemoveTopic(It.IsInRange(int.MinValue, MockTopic.MinTopicId - 1, Range.Inclusive))
                     .Result)
             .Returns(UnsuccessfulNumberOfDeletes);
-        
+
         /*
          * Setup RemoveTopic to return the number 0 if an invalid topic ID is passed in.
          */

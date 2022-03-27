@@ -1,32 +1,36 @@
 using System.Reflection;
-using Somewhere.Services.Extensions;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Somewhere.Core.Extensions;
 using Microsoft.OpenApi.Models;
+using Somewhere.Api.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policyBuilder =>
-        {
-            policyBuilder.AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-        });
+    {
+        policyBuilder.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
 });
 
 builder.Services.AddControllers();
+builder.Services.AddFluentValidation();
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", 
+    options.SwaggerDoc("v1",
         new OpenApiInfo
         {
             Title = "Some API",
             Version = "v1",
             Description = "An API for a forum somewhere."
         });
-    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+    options.EnableAnnotations();
 });
 
 builder.Services.AddSomeDataServices();
@@ -35,6 +39,7 @@ var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseReDoc();
 
 if (app.Environment.IsDevelopment())
 {

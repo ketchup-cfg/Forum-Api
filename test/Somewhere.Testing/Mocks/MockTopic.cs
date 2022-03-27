@@ -7,7 +7,7 @@ public static class MockTopic
     public const int MinTopicId = 0;
     public const int MaxTopicId = 99;
     public const int MaxTopicsPerPage = 30;
-    
+
     public static Topic Create(int id = MinTopicId, string? name = null, string? description = null)
     {
         return new Topic
@@ -17,7 +17,7 @@ public static class MockTopic
             Description = description
         };
     }
-    
+
     public static IEnumerable<Topic> CreateMany(int numberOfTopics)
     {
         var topics = new List<Topic>();

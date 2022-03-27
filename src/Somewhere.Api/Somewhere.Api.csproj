@@ -5,17 +5,18 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <NoWarn>$(NoWarn);1591</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Somewhere.Data\Somewhere.Data.csproj" />
-      <ProjectReference Include="..\Somewhere.Services\Somewhere.Services.csproj" />
+        <ProjectReference Include="..\Somewhere.Data\Somewhere.Data.csproj" />
+        <ProjectReference Include="..\Somewhere.Core\Somewhere.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
+        <PackageReference Include="FluentValidation.AspNetCore" Version="10.4.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.3.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="6.3.0" />
     </ItemGroup>
 
 </Project>

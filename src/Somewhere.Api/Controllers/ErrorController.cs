@@ -6,15 +6,15 @@ namespace Somewhere.Api.Controllers;
 [ApiController]
 public class ErrorController : Controller
 {
-
     [Route("/error")]
     [ApiExplorerSettings(IgnoreApi = true)]
     public IActionResult HandleError()
     {
         return Problem();
     }
-    
+
     [Route("/error-development")]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public IActionResult HandleErrorDevelopment(
         [FromServices] IHostEnvironment env)
     {

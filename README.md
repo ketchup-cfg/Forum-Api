@@ -1,9 +1,9 @@
 
-# Somewhere
+# some-web-api
 
-Some kind of forum that's a great place to go when you want to talk about something. I don't know, I don't get paid to come up with catchy names and slogans.
+This is a web API application built with ASP.NET Core that provides several REST API endpoints to support some kind of forum.
 
-This application is a ASP.NET Core web application, with an ASP.NET Core REST API web server (src/Somewhere.Api) and plans for either a Blazor WASM front-end or a full-stack Razor Pages application.
+It currently supports several endpoints that allow for forum topics to be retrieved, created, updated, or deleted.
 
 ## Installing Dependencies
 
