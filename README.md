@@ -1,7 +1,7 @@
 
 # somewhere-web-api
 
-This is a web API application built with ASP.NET Core that provides several REST API endpoints to support some kind of forum.
+This is a web API application built with ASP.NET Core that provides several REST API endpoints to support a forum of some kind.
 
 It currently supports several endpoints that allow for forum topics to be retrieved, created, updated, or deleted.
 
