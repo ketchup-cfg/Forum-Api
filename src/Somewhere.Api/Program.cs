@@ -9,15 +9,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(policyBuilder =>
+    options.AddPolicy("AllowSomewhereFrontendApp", policy =>
     {
-        policyBuilder.AllowAnyOrigin()
-            .AllowAnyHeader()
+        policy.WithOrigins("http://localhost:8080")
             .AllowAnyMethod();
     });
 });
 
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddFluentValidation();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -51,8 +51,8 @@ else
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowSomewhereFrontendApp");
 app.UseAuthorization();
-app.UseCors();
 app.MapControllers();
 
 app.Run();
