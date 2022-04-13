@@ -1,5 +1,5 @@
 
-# somewhere-web-api
+# some-aspnetcore-app
 
 This is a web API application built with ASP.NET Core that provides several REST API endpoints to support a forum of some kind.
 
@@ -15,7 +15,7 @@ Then, navigate to the root of the application file system and run `dotnet restor
 
 ### Running the ASP.NET Core Web API Application
 
-First, navigate to the [/src/Somewhere.Api](https://github.com/ketchup-cfg/Somewhere/tree/main/src/Somewhere.Api) directory, and create a file named appsettings.Development.json.
+First, navigate to the [/src/Somewhere.Api](https://github.com/ketchup-cfg/some-aspnetcore-app/tree/main/src/Somewhere.Api) directory, and create a file named appsettings.Development.json.
 
 Then, add the following content in the file to point the application to a configured PostgreSQL database:
 ```json
@@ -26,7 +26,7 @@ Then, add the following content in the file to point the application to a config
 }
 ```
 
-After the appsettings file has been configured, either run `dotnet run` from the [/src/Somewhere.Api](https://github.com/ketchup-cfg/Somewhere/tree/main/src/Somewhere.Api) directory or run `dotnet run --project src/Somewhere.Api/Somewhere.Api.csproj` from the app's root directory to run the ASP.NET Core Web API application.
+After the appsettings file has been configured, either run `dotnet run` from the [/src/Somewhere.Api](https://github.com/ketchup-cfg/some-aspnetcore-app/tree/main/src/Somewhere.Api) directory or run `dotnet run --project src/Somewhere.Api/Somewhere.Api.csproj` from the app's root directory to run the ASP.NET Core Web API application.
 
 ### Swagger API Documentation
 
