@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace WallOfNoise.Api.Controllers.Base;
+namespace HeavyMetalMachine.Api.Controllers.Base;
 
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces("application/json")]
-public abstract class SomeBaseController : ControllerBase
+public abstract class HeavyMetalBaseController : ControllerBase
 {
 }

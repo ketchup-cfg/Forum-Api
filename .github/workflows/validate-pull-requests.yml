@@ -12,15 +12,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Setup .NET for this Heavy Metal Machine
+      - name: Setup .NET for a heavy metal machine
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
       - name: Restore dependencies
         run: dotnet restore
-      - name: Build the Heavy Metal Machine
+      - name: Build a heavy metal machine
         run: dotnet build --no-restore
-      - name: Sound check
+      - name: Sound check!
         run: dotnet test --no-build --verbosity normal
         env:
           ASPNETCORE_ENVIRONMENT: Testing

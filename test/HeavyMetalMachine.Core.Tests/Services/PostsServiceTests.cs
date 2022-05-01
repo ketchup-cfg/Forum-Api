@@ -1,6 +1,4 @@
-using System;
 using System.Linq;
-using System.Threading.Tasks;
 using HeavyMetalMachine.Core.Abstractions;
 using HeavyMetalMachine.Testing.Mocks;
 using Xunit;

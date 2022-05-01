@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using HeavyMetalMachine.Testing.Mocks;
-using WallOfNoise.Api.Controllers;
+using HeavyMetalMachine.Api.Controllers;
 using Xunit;
 
 namespace HeavyMetalMachine.Api.Tests.Controllers;

@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using HeavyMetalMachine.Core.Abstractions;
-using WallOfNoise.Api.Controllers.Base;
+using HeavyMetalMachine.Api.Controllers.Base;
 using HeavyMetalMachine.Core.Models;
 
-namespace WallOfNoise.Api.Controllers;
+namespace HeavyMetalMachine.Api.Controllers;
 
-public class PostsController : SomeBaseController
+public class PostsController : HeavyMetalBaseController
 {
     private readonly IPostsService _posts;
     private readonly ILogger<PostsController> _log;

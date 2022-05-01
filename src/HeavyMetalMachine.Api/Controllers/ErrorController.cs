@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WallOfNoise.Api.Controllers;
+namespace HeavyMetalMachine.Api.Controllers;
 
 [ApiController]
 public class ErrorController : Controller
