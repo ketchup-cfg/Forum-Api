@@ -1,9 +1,9 @@
 
-# some-aspnetcore-app
+# Heavy Metal Machine: A Music Forum
 
-This is a web API application built with ASP.NET Core that provides several REST API endpoints to support a forum of some kind.
+This is a web application built with ASP.NET Core that provides several REST API endpoints to support the world's least favorite music forum.
 
-It currently supports several endpoints that allow for forum topics to be retrieved, created, updated, or deleted.
+The web application is currently built with a RESTful web API service providing backend services, and a planned frontend to be built with Blazor.
 
 ## Installing Dependencies
 
@@ -11,30 +11,22 @@ First, ensure that you have .NET 6 installed and configured on the target system
 
 Then, navigate to the root of the application file system and run `dotnet restore` to install the NuGet dependencies for all projects within the solution.
 
-## Somewhere.Api
+## HeavyMetalMachine.Api
 
 ### Running the ASP.NET Core Web API Application
 
-First, navigate to the [/src/Somewhere.Api](https://github.com/ketchup-cfg/some-aspnetcore-app/tree/main/src/Somewhere.Api) directory, and create a file named appsettings.Development.json.
+First, navigate to the [/src/HeavyMetalMachine.Api](https://github.com/ketchup-cfg/Somewhere/tree/main/src/HeavyMetalMachine.Api) directory, and create a file named appsettings.Development.json.
 
 Then, add the following content in the file to point the application to a configured PostgreSQL database:
 ```json
 {
    "ConnectionStrings": {
-      "Somewhere": "<PostgreSQL Database Connection String>"
+      "HeavyMetalMachine": "<PostgreSQL Database Connection String>"
    }
 }
 ```
 
-After the appsettings file has been configured, either run `dotnet run` from the [/src/Somewhere.Api](https://github.com/ketchup-cfg/some-aspnetcore-app/tree/main/src/Somewhere.Api) directory or run `dotnet run --project src/Somewhere.Api/Somewhere.Api.csproj` from the app's root directory to run the ASP.NET Core Web API application.
-
-### Swagger API Documentation
-
-This application provides functionality to serve documentation and a testing environment with Swagger at the `/swagger` endpoint when the application is run in a development environment.
-
-To ensure that you are running the application in a development environment, ensure that the `ASPNETCORE_ENVIRONMENT` environment variable is set to `"Development"`.
-
-Once this has been done, run `dotnet run --project src/Somewhere.Api/Somewhere.Api.csproj` to startup the Somewhere.Api application, the navigate to `https://localhost:<port>/swagger` in a web browser to view the Swagger documentation for the Somewhere.Api application.
+After the appsettings file has been configured, either run `dotnet run` from the [/src/HeavyMetalMachine.Api](https://github.com/ketchup-cfg/Somewhere/tree/main/src/HeavyMetalMachine.Api) directory or run `dotnet run --project src/HeavyMetalMachine.Api/HeavyMetalMachine.Api.csproj` from the app's root directory to run the ASP.NET Core Web API application.
 
 ## Running Unit Tests
 

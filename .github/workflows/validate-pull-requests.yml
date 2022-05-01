@@ -1,4 +1,4 @@
-name: Validate Some Pull Requests
+name: Validate Pull Requests
 
 on:
   pull_request:
@@ -12,15 +12,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Setup .NET for something
+      - name: Setup .NET for a heavy metal machine
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
-      - name: Restore some dependencies
+      - name: Restore dependencies
         run: dotnet restore
-      - name: Build some app
+      - name: Build a heavy metal machine
         run: dotnet build --no-restore
-      - name: Test some stuff
+      - name: Sound check!
         run: dotnet test --no-build --verbosity normal
         env:
           ASPNETCORE_ENVIRONMENT: Testing
