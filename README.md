@@ -15,7 +15,7 @@ Then, navigate to the root of the application file system and run `dotnet restor
 
 ### Running the ASP.NET Core Web API Application
 
-First, navigate to the [/src/HeavyMetalMachine.Api](https://github.com/ketchup-cfg/Somewhere/tree/main/src/HeavyMetalMachine.Api) directory, and create a file named appsettings.Development.json.
+First, navigate to the [/src/HeavyMetalMachine.Api](https://github.com/ketchup-cfg/music-forum-webapp/tree/main/src/HeavyMetalMachine.Api) directory, and create a file named appsettings.Development.json.
 
 Then, add the following content in the file to point the application to a configured PostgreSQL database:
 ```json
@@ -26,7 +26,7 @@ Then, add the following content in the file to point the application to a config
 }
 ```
 
-After the appsettings file has been configured, either run `dotnet run` from the [/src/HeavyMetalMachine.Api](https://github.com/ketchup-cfg/Somewhere/tree/main/src/HeavyMetalMachine.Api) directory or run `dotnet run --project src/HeavyMetalMachine.Api/HeavyMetalMachine.Api.csproj` from the app's root directory to run the ASP.NET Core Web API application.
+After the appsettings file has been configured, either run `dotnet run` from the [/src/HeavyMetalMachine.Api](https://github.com/ketchup-cfg/music-forum-webapp/tree/main/src/HeavyMetalMachine.Api) directory or run `dotnet run --project src/HeavyMetalMachine.Api/HeavyMetalMachine.Api.csproj` from the app's root directory to run the ASP.NET Core Web API application.
 
 ## Running Unit Tests
 
