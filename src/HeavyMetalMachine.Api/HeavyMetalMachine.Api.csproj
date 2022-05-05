@@ -12,4 +12,8 @@
         <ProjectReference Include="..\HeavyMetalMachine.Core\HeavyMetalMachine.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="FluentValidation.AspNetCore" Version="11.0.0" />
+    </ItemGroup>
+
 </Project>

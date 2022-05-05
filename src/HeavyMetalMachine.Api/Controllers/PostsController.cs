@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using HeavyMetalMachine.Core.Abstractions;
 using HeavyMetalMachine.Api.Controllers.Base;
 using HeavyMetalMachine.Core.Models;
+using HeavyMetalMachine.Core.Validation;
 
 namespace HeavyMetalMachine.Api.Controllers;
 
@@ -57,11 +58,17 @@ public class PostsController : HeavyMetalBaseController
     /// <param name="post">The new post to be created.</param>
     /// <returns>The newly created post, including its new ID.</returns>
     [HttpPost]
-    public async Task<IActionResult> CreateTopic([FromBody] Post post)
+    public async Task<IActionResult> CreateTopic([FromBody] PostDto post)
     {
         _log.LogInformation("Creating new post with title: {PostTitle}", post.Title);
-        
-        var newPost = await _posts.AddPost(post);
+
+        var newPost = new Post
+        {
+            Title = post.Title,
+            Content = post.Content
+        };
+            
+        newPost = await _posts.AddPost(newPost);
         
         _log.LogInformation("New post successfully created with ID of {PostId}", newPost.Id);
 
@@ -75,11 +82,16 @@ public class PostsController : HeavyMetalBaseController
     /// <param name="post">The post values to replace the existing post's values with.</param>
     [HttpPut("{id:int}")]
     [Consumes("application/json")]
-    public async Task<IActionResult> UpdatePost([FromRoute] int id, [FromBody] Post post)
+    public async Task<IActionResult> UpdatePost([FromRoute] int id, [FromBody] PostDto post)
     {
         _log.LogInformation("Updating post with ID of {PostId}", id);
-        
-        var numberOfPostsUpdated = await _posts.UpdatePost(id, post);
+
+        var updatedPost = new Post
+        {
+            Title = post.Title,
+            Content = post.Content
+        };
+        var numberOfPostsUpdated = await _posts.UpdatePost(id, updatedPost);
         _log.LogInformation("Updated {UpdateCount} posts with an ID of {PostId}", numberOfPostsUpdated, id);
         
         return numberOfPostsUpdated == 0 ? NotFound() : NoContent();
