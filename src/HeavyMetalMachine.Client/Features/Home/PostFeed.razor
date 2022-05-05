@@ -1,0 +1,36 @@
+@inject HttpClient _http
+
+<div class="columns">
+
+    <NewPostCard />
+    
+    @if (_posts is null)
+    {
+        <p class="content column is-three-fifths is-offset-one-fifth">
+            Loading posts...
+        </p>
+    }
+    else
+    {
+        @foreach (var post in _posts)
+        {
+            <PostCard Post="post" />
+        }
+    }
+</div>
+
+@code {
+    private IEnumerable<Post>? _posts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _posts = await _http.GetFromJsonAsync<IEnumerable<Post>>("api/v1/posts");
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"There was a problem loading post data: {ex.Message}");
+        }
+    }
+}
