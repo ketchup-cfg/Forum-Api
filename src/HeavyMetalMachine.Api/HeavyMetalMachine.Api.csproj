@@ -5,15 +5,22 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <RootNamespace>WallOfNoise.Api</RootNamespace>
+        <RootNamespace>HeavyMetalMachine.Api</RootNamespace>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\HeavyMetalMachine.Client\HeavyMetalMachine.Client.csproj" />
         <ProjectReference Include="..\HeavyMetalMachine.Core\HeavyMetalMachine.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="FluentValidation.AspNetCore" Version="11.0.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="appsettings.Development.json" />
     </ItemGroup>
 
 </Project>

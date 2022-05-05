@@ -25,7 +25,10 @@ else
 }
 
 app.UseHttpsRedirection();
-app.UseAuthorization();
+app.UseBlazorFrameworkFiles();
+app.UseStaticFiles();
+app.UseRouting();
 app.MapControllers();
+app.MapFallbackToFile("index.html");
 
 app.Run();
