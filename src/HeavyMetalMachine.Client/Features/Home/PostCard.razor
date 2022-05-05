@@ -1,0 +1,28 @@
+<div class="column is-three-fifths is-offset-one-fifth">
+    <div class="card">
+    
+        <header class="card-header">
+            <p class="card-header-title">
+                @Post.Title
+            </p>
+        </header>
+
+        <div class="card-content">
+            <div class="content">
+                @Post.Content
+            </div>
+        </div>
+
+        <footer class="card-footer">
+            <a href="#" class="card-footer-item">Save</a>
+            <a href="#" class="card-footer-item">Edit</a>
+            <a href="#" class="card-footer-item">Delete</a>
+        </footer>
+        
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public Post Post { get; set; } = default!;
+}
